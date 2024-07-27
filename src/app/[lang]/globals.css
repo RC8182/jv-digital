@@ -4,4 +4,34 @@
 
 .bg-gpt_balanced {
     background: linear-gradient(130deg, #2870EA 20%, #1B4AEF 77.5%);
+}
+
+.custom-rounded-corner {
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-rounded-corner::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 400px;
+  height: 250px;
+  border-radius: 80%;
+  background-image: url('/photos/portada.png');
+  background-size: cover;
+  background-position: center;
+  border: 10px solid white; /* Agrega un borde blanco grueso */
+}
+
+@media (max-width: 768px) {
+  .custom-rounded-corner::before {
+    position: static;
+    width: 300px;
+    height: 150px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 10px solid white; /* Agrega un borde blanco grueso */
   }
+}
