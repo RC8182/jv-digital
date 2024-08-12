@@ -46,6 +46,28 @@ export const datos = {
                 }
             
         },
+        
+    "it": {
+
+        images:{
+                carrucel:[
+                    {
+                        src: carrucel_1,
+                        alt:'',
+                    },
+                    {
+                        src: carrucel_2,
+                        alt:'',
+                    },
+                    {
+                        src: carrucel_3,
+                        alt:'',
+                    },    
+                ],
+
+            }
+        
+    },
                
 
     }

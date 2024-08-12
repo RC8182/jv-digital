@@ -12,7 +12,7 @@ export const Idiomas = () => {
   const ruta = dividir.slice(2).join('/'); // Excluir el prefijo del idioma y obtener el resto de la ruta
 
   return (
-    <div className="p-2 w-30 h-8 text-sm text-white bg-blue-600 rounded-lg flex items-center justify-center gap-8">
+    <div className="p-2 w-30 h-8 text-sm text-white rounded-lg flex items-center justify-center gap-8">
       <Link href={`/es/${ruta}`}><Image src={es} alt="Español" width={20} height={20} /></Link> 
       <Link href={`/it/${ruta}`}><Image src={it} alt="Italiano" width={20} height={20} /></Link> 
       <Link href={`/en/${ruta}`}><Image src={uk} alt="English" width={20} height={20} /></Link> 

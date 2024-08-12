@@ -4,8 +4,7 @@ import { datos } from "./db";
 
 export default async function Galeria({idioma}) {
 
-  const datosGaleria =( idioma=='es') ? datos.es : datos.en;
-  const data = datosGaleria.galeria.imagenes;
+  const data = datos[idioma].galeria.imagenes;
 
   return (
     <div className="bg-blue-900 text-white w-full p-2 lg:min-w-[100vw]">

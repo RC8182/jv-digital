@@ -17,6 +17,7 @@ RUN npm install && \
     npm install autoprefixer &&\
     npm install zustand &&\
     npm install react-icons &&\
+    npm install swiper &&\
     npx tailwindcss init -p && \
     npm run build
 

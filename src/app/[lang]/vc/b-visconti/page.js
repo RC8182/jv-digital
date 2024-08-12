@@ -6,7 +6,9 @@ export default function Vcb({params}) {
   return (
     <div>
       <meta name="google-site-verification" content="6Wleb1gKWBvvhDhTruIXhwFweF4P7KhhoVpZ-UM1-y4" />
-      <VirtualCard db={data[idioma]}/>
+      <section className="bg-blue-900">
+        <VirtualCard db={data[idioma]}/>
+      </section>
     </div>
   );
 }

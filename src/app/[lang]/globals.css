@@ -23,6 +23,7 @@
   background-size: cover;
   background-position: center;
   border: 10px solid white; /* Agrega un borde blanco grueso */
+  margin-top: 180px;
 }
 
 @media (max-width: 768px) {

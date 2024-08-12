@@ -33,7 +33,7 @@ export default function ProgressSlider({ list }) {
   };
 
   return (
-    <div className="w-full xl:w-screen text-center">
+    <div className="max-w-[600px] xl:w-screen text-center">
       {/* Item image */}
       <div className="transition-all duration-150 delay-300 ease-in-out">
         <div className="flex flex-col" ref={itemsRef}>
