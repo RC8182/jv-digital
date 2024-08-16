@@ -56,7 +56,7 @@ const navLinks = {
     { name: "Chi siamo", path: "#about", subLinks: [] },
     {
       name: "Reti Sociali",
-      path: "#about",
+      path: "#",
       subLinks: [
         { name: "Facebook", path: "https://www.facebook.com/profile.php?id=61560950767368" },
         { name: "Instagram", path: "https://www.instagram.com/jvdigital81" },

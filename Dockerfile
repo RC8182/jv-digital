@@ -1,12 +1,15 @@
 FROM node:20.5.1-alpine3.18
 
-
 WORKDIR /app
 
 COPY . .
 
+# Cambios realizados para asegurar permisos correctos
 RUN chown -R node:node /app && \
-    chmod -R 755 /app/public
+    chmod -R 755 /app/public && \
+    mkdir -p /app/public/uploads && \
+    chown -R node:node /app/public/uploads && \
+    chmod -R 755 /app/public/uploads
 
 USER node
 RUN npm install && \
@@ -18,9 +21,10 @@ RUN npm install && \
     npm install zustand &&\
     npm install react-icons &&\
     npm install swiper &&\
+    npm install multer &&\
     npx tailwindcss init -p && \
     npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
