@@ -36,3 +36,10 @@
     border: 10px solid white; /* Agrega un borde blanco grueso */
   }
 }
+.custom-list li {
+  @apply text-black; /* Color del texto */
+}
+
+.custom-list li::marker {
+  color:#3b82f6; /* Color de los puntos */
+}
