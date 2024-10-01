@@ -1,6 +1,16 @@
-import React from 'react';
+'use client'
+import AOS from "aos"; // Importa AOS
+import "aos/dist/aos.css"; // Importa los estilos de AOS
+import React, { useEffect } from 'react';
 
 const About = ({ idioma }) => {
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Duración de la animación
+      once: false, // Para animar solo una vez
+    });
+  }, []);
   const contenido = {
     es: {
       title: "Sobre Nosotros",
@@ -29,11 +39,13 @@ const About = ({ idioma }) => {
 
   return (
     <div className="bg-blue-900 text-white p-8 mt-4 mb-4" id='about'>
-      <h1 className="text-3xl text-center font-bold mb-4">{title}</h1>
+      <div data-aos="fade-up" data-aos-duration="3000">
+      <h1 className="text-3xl text-metal text-center font-bold mb-4">{title}</h1>
       <p className="mb-4">{parraf1}</p>
       <p className="mb-4">{parraf2}</p>
       <p className="mb-4">{parraf3}</p>
       <p className="font-semibold">{parraf4}</p>
+      </div>
     </div>
   );
 };

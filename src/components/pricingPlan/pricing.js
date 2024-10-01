@@ -13,7 +13,9 @@ const translations = {
     price: "Price:",
     contact: "Contact",
     serviceInfo: "* All our plans include access to IT service once a month at no additional cost",
-    domainInfo: "* We offer the domain for free during the first year. From the second year, the annual cost will be approximately 30€, depending on the rates set by the domain provider."
+    domainInfo: "* We offer the domain for free during the first year. From the second year, the annual cost will be approximately 30€, depending on the rates set by the domain provider.",
+    reservesService: "Reservation Service",
+    planPlus: "Plan Plus"
   },
   es: {
     title: "Elige Tu Plan",
@@ -24,20 +26,25 @@ const translations = {
     price: "Precio:",
     contact: "Contacta",
     serviceInfo: "* Todos nuestros planes incluyen acceso al servicio informático una vez al mes sin ningún costo adicional",
-    domainInfo: "* Ofrecemos el dominio de forma gratuita durante el primer año. A partir del segundo año, el costo anual será aproximadamente de 30€, dependiendo de las tarifas establecidas por el proveedor del dominio."
+    domainInfo: "* Ofrecemos el dominio de forma gratuita durante el primer año. A partir del segundo año, el costo anual será aproximadamente de 30€, dependiendo de las tarifas establecidas por el proveedor del dominio.",
+    reservesService: "Servicio de Reservas",
+    planPlus: "Plan Plus"
   },
   it: {
     title: "Scegli Il Tuo Piano",
     subtitle: "Scegli il piano che meglio si adatta alla tua attività e assicura la tua presenza online.",
     firstWeek: "Settimana 1:",
     subsequentWeeks: "Poi:",
-    perWeek: "/settimanalmente",
+    perWeek: "/settimana",
     price: "Prezzo:",
     contact: "Contatta",
     serviceInfo: "* Tutti i nostri piani includono l'accesso al servizio informatico una volta al mese senza costi aggiuntivi",
-    domainInfo: "* Offriamo il dominio gratuitamente durante il primo anno. Dal secondo anno, il costo annuale sarà di circa 30€, a seconda delle tariffe stabilite dal provider del dominio."
+    domainInfo: "* Offriamo il dominio gratuitamente durante il primo anno. Dal secondo anno, il costo annuale sarà di circa 30€, a seconda delle tariffe stabilite dal provider del dominio.",
+    reservesService: "Servizio di Prenotazione",
+    planPlus: "Piano Plus"
   }
 };
+
 
 
 
@@ -55,36 +62,37 @@ const PricingPlans = ({ db }) => {
   const booking = 25;
   const plus = 15;
 
-  const switchPlans = (plan) => {
+  const switchPlans = (plan, t) => {
     let firstWeekPrice = plan.firstWeekPrice;
     let subsequentWeeksPrice = plan.subsequentWeeksPrice;
     let feature = [...plan.features];
-
+  
     if (plan.reserves) {
       firstWeekPrice += booking;
       subsequentWeeksPrice += booking;
-      if (!feature.includes('Servicio de Reservas')) {
-        feature.unshift('Servicio de Reservas');
+      if (!feature.includes(t.reservesService)) {
+        feature.unshift(t.reservesService);
       }
     }
-
+  
     if (plan.plus) {
       firstWeekPrice += plus;
       subsequentWeeksPrice += plus;
-
+  
       const alcanceIndex = feature.findIndex(f => f.includes('Alcance'));
       const clicksIndex = feature.findIndex(f => f.includes('Clicks'));
-
+  
       if (alcanceIndex !== -1) feature[alcanceIndex] = 'Alcance 26.000 Personas';
       if (clicksIndex !== -1) feature[clicksIndex] = 'Clicks 50';
-
-      if (!feature.includes('Plan Plus')) {
-        feature.unshift('Plan Plus');
+  
+      if (!feature.includes(t.planPlus)) {
+        feature.unshift(t.planPlus);
       }
     }
-
+  
     return { firstWeekPrice, subsequentWeeksPrice, feature };
   };
+  
 
   const t = translations[idioma] || translations.es;
 
@@ -98,7 +106,7 @@ const PricingPlans = ({ db }) => {
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {plans?.map((plan, index) => {
-            const { firstWeekPrice, subsequentWeeksPrice, feature } = switchPlans(plan);
+            const { firstWeekPrice, subsequentWeeksPrice, feature } = switchPlans(plan, t);
 
             return (
               <div key={index} className="bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
@@ -108,7 +116,7 @@ const PricingPlans = ({ db }) => {
                 </div>
                 {plan.checkbox ? (
                   <div className="mb-8">
-                    <Checkboxes planIndex={index} />
+                    <Checkboxes planIndex={index} reservesLabel={t.reservesService} plusLabel={t.planPlus} />
                     <span className="text-2xl font-extrabold text-white">{t.firstWeek}<br /><span className='text-4xl m-4'>{firstWeekPrice}€</span> </span>
                     <br />
                     <span className="text-2xl font-extrabold text-white">{t.subsequentWeeks} <br /><span className='text-4xl m-4'>{subsequentWeeksPrice}€</span></span>

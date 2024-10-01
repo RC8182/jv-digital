@@ -7,7 +7,7 @@ export const Asistire = ({ telefono }) => {
   const url = `https://api.whatsapp.com/send/?phone=${telefono}&text=${encodeURIComponent(mensajeES)}`;
 
   return (
-    <button className="bg-green-500 text-white px-4 py-2 rounded flex items-center space-x-2">
+    <button className="bg-green-500 text-white text-xs p-2 rounded flex items-center space-x-2">
       <FaThumbsUp />
       <Link
         className="text-white"

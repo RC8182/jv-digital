@@ -2,7 +2,7 @@
 import useStore from '@/store/planesStore';
 import React from 'react';
 
-const Checkboxes = ({ planIndex }) => {
+const Checkboxes = ({ planIndex, reservesLabel, plusLabel }) => {
   const { plans, toggleReserves, togglePlus } = useStore((state) => ({
     plans: state.plans,
     toggleReserves: state.toggleReserves,
@@ -29,7 +29,7 @@ const Checkboxes = ({ planIndex }) => {
           className="peer hidden"
         />
         <span className={`w-4 h-4 border-2 rounded-full ${plan.reserves ? 'bg-gpt_blue border-gpt_blue' : 'border-white'} peer-checked:bg-gpt_blue`}></span>
-        <span className="ml-2 text-gray-400">Servicio de Reservas</span>
+        <span className="ml-2 text-gray-400">{reservesLabel}</span>
       </label>
       <label className="flex items-center my-2 cursor-pointer">
         <input
@@ -39,7 +39,7 @@ const Checkboxes = ({ planIndex }) => {
           className="peer hidden"
         />
         <span className={`w-4 h-4 border-2 rounded-full ${plan.plus ? 'bg-gpt_blue border-gpt_blue' : 'border-white'} peer-checked:bg-gpt_blue`}></span>
-        <span className="ml-2 text-gray-400">Plan Plus</span>
+        <span className="ml-2 text-gray-400">{plusLabel}</span>
       </label>
     </div>
   );

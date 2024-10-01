@@ -1,9 +1,10 @@
 'use client';
+import { Asistire } from '@/components/virtualParty/botones/asistire';
 import { Direccion } from '@/components/virtualParty/botones/ir';
+import { NoAsistire } from '@/components/virtualParty/botones/noAsistire';
 import Footer from '@/components/virtualParty/footer';
 import Portada from '@/components/virtualParty/portada/portada';
 import UploadPhoto from '@/components/virtualParty/UploadPhoto';
-import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaHourglassEnd, FaDownload, FaTrashAlt } from 'react-icons/fa';
 
@@ -49,28 +50,28 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <Head>
-        <title>Fabrizio Cumple Playa</title>
-        <meta name="description" content="Soy Fabrizio Visconti y te invito a mi Cumple!" />
-      </Head>
-      <Portada />
+    <div className='bg-blue-200'>
+    <div className="min-h-screen max-w-[900px] bg-gray-100 flex flex-col items-center justify-center mx-auto">
+      <div className='h-full w-full'>
+        <Portada />
+      </div>
+      
       <h1 className="text-4xl text-blue-500 text-center font-bold m-8">Te estaremos esperando!</h1>
 
       <div className="text-black text-center mb-8">
-        <div className="flex items-center justify-center space-x-4">
+        <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
           <FaCalendarAlt className="text-blue-500" />
           <p className="text-lg">Día del Evento: 29 de Agosto, 2024</p>
         </div>
-        <div className="flex space-x-4">
+        <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
           <FaClock className="text-blue-500" />
           <p className="text-lg">Hora de Inicio: 5:00 PM</p>
         </div>
-        <div className="flex space-x-4">
+        <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
           <FaMapMarkerAlt className="text-blue-500" />
           <p className="text-lg">Lugar: Playa La Jaquita</p>
         </div>
-        <div className="flex space-x-4">
+        <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
           <FaHourglassEnd className="text-blue-500" />
           <p className="text-lg">Hora de Finalización: 8:00 PM</p>
         </div>
@@ -141,7 +142,22 @@ export default function Home() {
           </div>
         </div>
       )}
-      <Footer />
+      <div className='w-full mb-12'>
+        <Footer />
+      </div>
+      
+      <div className="w-full z-50">
+        <div className="bg-gpt_blue fixed bottom-0  border-t-2 border-verde1 rounded-t-lg overflow-hidden w-full max-w-[900px] mx-auto">
+          <div className="flex m-2 items-center justify-between text-white">
+            <Asistire telefono={'34690984440'} />
+            
+            <NoAsistire telefono={'34690984440'} />
+            <Direccion />
+          </div>
+        </div>
+      </div>
+
+    </div>
     </div>
   );
 }

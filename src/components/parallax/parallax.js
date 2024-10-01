@@ -8,7 +8,7 @@ export const Parallax = ({ img, alt, title }) => {
       </div>
       <div
         className='fondo relative bg-blue-900 bg-fixed bg-center bg-no-repeat'
-        style={{ minWidth: '300px', minHeight: '1200px', backgroundImage: `url(${img})`, backgroundSize: 'contain' }}
+        style={{ minWidth: '300px', minHeight: '800px', backgroundImage: `url(${img})`, backgroundSize: 'contain' }}
       >
         <AltComponent alt={alt} />
         <div className='contenedor-titulo absolute inset-0 text-center mt-24'>

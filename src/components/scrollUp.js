@@ -32,6 +32,7 @@ const ScrollToTopButton = () => {
       }`}
       onClick={scrollToTop}
       style={{ cursor: "pointer" }}
+      aria-label="Name"
     >
       <BiChevronUp className="h-5 w-5 text-blue-500" />
     </button>

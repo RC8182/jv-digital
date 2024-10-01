@@ -21,9 +21,11 @@ export const VirtualCard = ({db}) => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-between w-full ">
         <div className="flex flex-col items-center w-full max-w-4xl mx-auto bg-gray-900">
-          <div className="w-full">
-            <Image src={portada} alt="JV-Digital foto de Portada" layout="responsive" width={920} height={200} className="rounded-t-lg" />
-          </div>
+          <Link href={'/'}>
+            <div className="w-full">
+              <Image src={portada} alt="JV-Digital foto de Portada" layout="responsive" width={920} height={200} className="rounded-t-lg" />
+            </div>
+          </Link>
           <div className="relative w-full">
             <div className="flex items-center justify-between gap-8 text-white h-10 p-4 bg-gpt_blue w-full">
               <Compartir title={db.botones.compartir}/>
@@ -33,9 +35,11 @@ export const VirtualCard = ({db}) => {
           </div>
           <div className=" p-8 shadow-lg rounded-b-lg w-full">
             <div className="m-2 text-2xl font-bold text-white flex justify-center items-center">
+              <Link  href={'/'}>
               <div className="w-[120px] h-[120px] z-10">
                 <Image src={icon} alt="Avatar" className="rounded-full" width={100} height={100} />
               </div>
+              </Link>
               <div className=" text-center font-bold">
                 <p>JV-Digital</p>
                 <p>{agentName}</p>

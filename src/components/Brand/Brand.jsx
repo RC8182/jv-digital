@@ -1,6 +1,6 @@
 const Brand = () => {
   return (
-    <div className="bg-khaki pt-[54px] pb-[44px]">
+    <div className="bg-[#1E3A8A80] pt-[54px] pb-[44px]">
       <div
         className="Container grid grid-cols-2 sm:grid-cols-2  md:grid-cols-5 2xl:grid-cols-5 items-center justify-center gap-[30px]"
         data-aos="fade-up"

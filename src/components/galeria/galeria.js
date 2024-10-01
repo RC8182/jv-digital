@@ -7,7 +7,7 @@ export default async function Galeria({idioma}) {
   const data = datos[idioma].galeria.imagenes;
 
   return (
-    <div className="bg-blue-900 text-white w-full p-2 lg:min-w-[100vw]">
+    <div className="bg-blue-900 text-metal w-full p-2 lg:min-w-[100vw]">
 
         <div className="flex flex-col items-center flex-wrap mb-10" id="galeria">        
           {data.map((e,i)=>{

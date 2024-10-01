@@ -115,9 +115,9 @@ const Navbar = ({ idioma }) => {
                 </Link>
                 {link.subLinks.length > 0 && (
                   <div className="absolute pt-5 lg:pt-8 z-20 hidden group-hover:block">
-                    <ul className="shadow-2xl rounded-sm bg-white text-black w-[200px] text-left transition-all duration-500 text-sm py-4">
+                    <ul className="shadow-2xl rounded-sm bg-[#1E3A8A80] text-white w-[200px] text-left transition-all duration-500 text-sm py-4">
                       {link.subLinks.map((subLink, subIndex) => (
-                        <div key={subIndex} className="px-5 group hover:bg-khaki hover:text-blue-500">
+                        <div key={subIndex} className="px-5 group hover:bg-khaki hover:text-metal">
                           <li className="hover:ml-3 duration-300">
                             <Link href={subLink.path} target="blank" className="py-2 block">
                               {subLink.name}

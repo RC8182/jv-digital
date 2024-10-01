@@ -88,11 +88,11 @@ const HeroSection = ({ idioma }) => {
   const { slider1, slider2, slider3, slider4, slider5 } = contenido[idioma];
 
   return (
-    <div className="">
+    <div className="bg-blue-900">
       <Swiper
         centeredSlides={true}
         navigation={true}
-        speed="3000"
+        speed="1500"
         autoplay={{
           delay: 10000,
           disableOnInteraction: true,
