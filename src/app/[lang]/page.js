@@ -7,7 +7,8 @@ import Footer from '@/components/Footer/Footer';
 import HeroSection from '@/components/HeroSection/HeroSection';
 import About from '@/components/about';
 import GoogleAnalytics from './googleAnalytics';
-import IFrameComponent from '@/components/IFrameComponent';
+import IFrameComponent from '@/components/iFrameComponent';
+import ScrollToTopButton from '@/components/scrollUp';
 
 const traducciones = {
   es: {
@@ -34,6 +35,7 @@ export default function Home({ params }) {
       <meta name="google-site-verification" content="6Wleb1gKWBvvhDhTruIXhwFweF4P7KhhoVpZ-UM1-y4" />
       <div className="w-full h-full">
       <GoogleAnalytics idioma={idioma} />
+      <ScrollToTopButton color={'text-metal'} bgcolor={'bg-black'} bordercolor={'border-metal'}/>
         <nav>
           <Navbar idioma={idioma} />
         </nav>

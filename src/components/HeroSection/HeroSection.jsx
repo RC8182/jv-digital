@@ -1,5 +1,6 @@
-'use client'
-// Import Swiper styles
+"use client";
+
+import { useState, useEffect } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "./style.css";
@@ -11,14 +12,15 @@ import { FaFacebookF, FaStar, FaTripadvisor, FaInstagram, FaGoogle } from "react
 import { BiPhoneCall } from "react-icons/bi";
 
 const HeroSection = ({ idioma }) => {
-  const tel = '+34 648 416 513';
+  const [isLoading, setIsLoading] = useState(true);
+  const tel = "+34 648 416 513";
 
   const contenido = {
     es: {
       slider1: {
         title: "Lleva tu negocio al siguiente nivel",
         subtitle: "Con JV-DIGITAL",
-        description: "Expertos en Marketing Digital y Estrategias Empresariales"
+        description: "Expertos en Marketing Digital y Estrategias Empresariales",
       },
       slider2: {
         title: "Conéctate con el mundo",
@@ -35,13 +37,15 @@ const HeroSection = ({ idioma }) => {
       slider5: {
         title: "Optimiza tu negocio",
         subtitle: "En Google My Business",
-      }
+      },
+      spinText1: "JV-Digital",
+      spinText2:"Tu Presencia Online",
     },
     en: {
       slider1: {
         title: "Take Your Business to the Next Level",
         subtitle: "With JV-DIGITAL",
-        description: "Experts in Digital Marketing and Business Strategies"
+        description: "Experts in Digital Marketing and Business Strategies",
       },
       slider2: {
         title: "Connect with the World",
@@ -59,12 +63,14 @@ const HeroSection = ({ idioma }) => {
         title: "Optimize Your Business",
         subtitle: "On Google My Business",
       },
+      spinText1: "JV-Digital",
+      spinText2:"La Tua Presenza Digitale",
     },
     it: {
       slider1: {
         title: "Porta la tua attività al livello successivo",
         subtitle: "Con JV-DIGITAL",
-        description: "Esperti in Marketing Digitale e Strategie Aziendali"
+        description: "Esperti in Marketing Digitale e Strategie Aziendali",
       },
       slider2: {
         title: "Connettiti con il mondo",
@@ -82,19 +88,48 @@ const HeroSection = ({ idioma }) => {
         title: "Ottimizza la tua attività",
         subtitle: "Su Google My Business",
       },
-    }
+      spinText1: "JV-Digital",
+      spinText2:"La Tua Presenza Online",
+    },
   };
 
-  const { slider1, slider2, slider3, slider4, slider5 } = contenido[idioma];
+  const { slider1, slider2, slider3, slider4, slider5, spinText1, spinText2 } = contenido[idioma];
+
+
+  // Simulate loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 10); 
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-[700px] bg-blue-900 text-white">
+        <div className="mb-4 text-2xl">
+          {spinText1}
+        </div>
+        {/* Logo que gira */}
+        <div style={{ animation: 'spin 3s linear infinite' }} className="inline-block w-32 h-32">
+          <img src='/photos/icons/jv-digital1.png' alt="Logo" className="w-full h-full rounded-full" />
+        </div>
+        {/* Texto de cargando */}
+        <div className="mt-4 text-xl">
+          {spinText2}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-blue-900">
       <Swiper
         centeredSlides={true}
         navigation={true}
-        speed="1500"
+        speed="2000"
         autoplay={{
-          delay: 10000,
+          delay: 2000,
           disableOnInteraction: true,
         }}
         pagination={{

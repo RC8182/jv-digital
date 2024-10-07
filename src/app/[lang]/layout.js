@@ -1,8 +1,25 @@
-import { Inter } from "next/font/google";
+import { Inter,  Dancing_Script, Roboto_Mono } from "next/font/google";
 import "./globals.css";
-import ScrollToTopButton from "@/components/scrollUp";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
+
+ 
+const roboto_mono = Roboto_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto-mono',
+})
+
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  weight: ['400', '700'], // Puedes elegir los pesos que necesites
+  style: ['normal'], // Agrega el estilo cursivo
+  variable: '--dancing-script',
+});
 
 export const metadata = {
   title: "JV-Digital: Tu Presencia OnLine",
@@ -12,8 +29,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}
-      <ScrollToTopButton/>
+      <body className={`${inter.variable} ${roboto_mono.variable} ${dancingScript.variable} `}>{children}
+      
       </body>
     </html>
   );

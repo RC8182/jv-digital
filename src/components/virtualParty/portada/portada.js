@@ -1,15 +1,15 @@
-import { datos } from './db';
 
-export default function Portada() {
-  const h1 = datos.portada.h1;
-  const h2 = datos.portada.h2;
-  const sub = datos.portada.subtitulo;
-  const img = datos.portada.img;
-  const emojis1 = datos.portada.emojis1;
-  const emojis2 = datos.portada.emojis2;
+
+export default function Portada({datos, fuente}) {
+  const h1 = datos.h1;
+  const h2 = datos.h2;
+  const sub = datos.subtitulo;
+  const img = datos.img;
+  const emojis1 = datos.emojis1;
+  const emojis2 = datos.emojis2;
 
   return (
-    <div className=''>
+    <div className={fuente}>
       <div className='fondo relative' 
 style={{ minWidth: '300px', minHeight: '600px', backgroundImage: `url(${img.src})`, backgroundPosition: 'top center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat' }}>
         

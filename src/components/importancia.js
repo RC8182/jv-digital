@@ -1,18 +1,18 @@
-'use client'
+ 'use client'
 import React, { useEffect, useState } from 'react';
 import image from '/public/importancia/img.png';
-import AOS from "aos"; // Importa AOS
-import "aos/dist/aos.css"; // Importa los estilos de AOS
+// import AOS from "aos"; // Importa AOS
+// import "aos/dist/aos.css"; // Importa los estilos de AOS
 
 const EmpresaOnline = ({ idioma }) => {
   const [showPopup, setShowPopup] = useState(false);
     // Inicializar AOS cuando el componente se monte
-    useEffect(() => {
-      AOS.init({
-        duration: 1000, // Duración de la animación
-        once: false, // Para animar solo una vez
-      });
-    }, []);
+    // useEffect(() => {
+    //   AOS.init({
+    //     duration: 500, // Duración de la animación
+    //     once: false, // Para animar solo una vez
+    //   });
+    // }, []);
 
   const contenido = {
     es: {
@@ -48,7 +48,7 @@ const EmpresaOnline = ({ idioma }) => {
 
   return (
     <div className="bg-blue-900 text-white p-8 mt-4 mb-4">
-      <div data-aos="fade-up" data-aos-duration="3000">
+      <div data-aos="fade-up">
       <h1 className="text-3xl text-metal text-center font-bold mb-4">{title}</h1>
       <p className="mb-4">{parraf1}</p>
       <p className="mb-4">{parraf2}</p>

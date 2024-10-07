@@ -1,8 +1,10 @@
 'use client'
 import { useEffect, useState } from "react";
 import { BiChevronUp } from "react-icons/bi";
+import AOS from "aos"; // Importa AOS
+import "aos/dist/aos.css"; // Importa los estilos de AOS
 
-const ScrollToTopButton = () => {
+const ScrollToTopButton = ({color, bgcolor,bordercolor}) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -24,17 +26,24 @@ const ScrollToTopButton = () => {
         behavior: "smooth",
       });
   };
+      // Inicializar AOS cuando el componente se monte
+    useEffect(() => {
+      AOS.init({
+        duration: 500, // Duración de la animación
+        once: false, // Para animar solo una vez
+      });
+    }, []);
 
   return (
     <button
-      className={`fixed bottom-16 right-4 rounded-full p-4 bg-black text-metal border-metal border-2 outline-none transition-opacity duration-200 z-50 ${
+      className={`fixed bottom-16 right-4 rounded-full p-4  ${bgcolor} ${color} ${bordercolor} border-2 outline-none transition-opacity duration-200 z-50 ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
       onClick={scrollToTop}
       style={{ cursor: "pointer" }}
       aria-label="Name"
     >
-      <BiChevronUp className="h-5 w-5 text-blue-500" />
+      <BiChevronUp className={`h-5 w-5 ${color}`} />
     </button>
   );
 };

@@ -68,7 +68,7 @@ const Footer = ({ idioma }) => {
               data-aos-duration="1000"
             >
               <div className="py-6 md:py-7 lg:py-[50px] px-10 lg:px-5 xl:px-8 2xl:px-9">
-                <img src="/images/home-1/logo-1.png" alt="" />
+                {/* <img src="/images/home-1/logo-1.png" alt="" /> */}
                 <div className="py-8 2xl:py-[50px]">
                   <h1 className="text-lg sm:text-xl md:text-[22px] leading-[38px] font-medium text-metal relative font-Garamond before:w-7 before:h-[1px] before:bg-khaki before:absolute before:left-0 before:top-10">
                     {contactInfo}
@@ -113,7 +113,6 @@ const Footer = ({ idioma }) => {
             <div
               className="pt-0 pb-8 overflow-x-hidden lg:col-span-2 2xl:col-span-2 ml-2"
               data-aos="fade-up"
-              data-aos-duration="1000"
             >
               <h1 className="text-lg sm:text-xl md:text-[22px] leading-[38px] font-medium text-metal relative font-Garamond before:w-7 before:h-[1px] before:bg-khaki before:absolute before:left-0 before:top-10 uppercase">
                 {ourClients}

@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* styles/globals.css */
+
+
+/* Aplicamos la fuente globalmente */
+
 .bg-gpt_balanced {
     background: linear-gradient(130deg, #2870EA 20%, #1B4AEF 77.5%);
 }
@@ -42,4 +47,12 @@
 
 .custom-list li::marker {
   color:#3b82f6; /* Color de los puntos */
+}
+
+.custom-list-50 li {
+  @apply text-gray-500; /* Color del texto */
+}
+
+.custom-list-50 li::marker {
+  color:#cb8f22; /* Color de los puntos */
 }

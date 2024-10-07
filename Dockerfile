@@ -21,6 +21,7 @@ RUN npm install && \
     npm install zustand &&\
     npm install react-icons &&\
     npm install aos --save &&\
+    npm install fslightbox-react &&\
     npm install swiper &&\
     npm install multer &&\
     npx tailwindcss init -p && \

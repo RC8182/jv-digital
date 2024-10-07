@@ -3,28 +3,31 @@ import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 
-export async function GET() {
-  const directory = path.join('public/uploads');
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const nombreDeLaPagina = searchParams.get('nombreDeLaPagina'); // Obtener nombreDeLaPagina de los parámetros de la URL
+
+  if (!nombreDeLaPagina) {
+    return NextResponse.json({ error: 'Falta el nombre de la página' }, { status: 400 });
+  }
+
+  const directory = path.join(process.cwd(), `public/vp/${nombreDeLaPagina}`);
   const files = await fs.promises.readdir(directory);
 
-  // Filtrar solo imágenes
   const images = files.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
 
-  // Redimensionar imágenes y guardarlas en una variable
   const resizedImages = await Promise.all(images.map(async (image) => {
     const inputPath = path.join(directory, image);
 
-    // Convertir a base64 después de redimensionar
     const resizedImageBuffer = await sharp(inputPath)
-      .resize(800) // Cambia el tamaño según sea necesario
+      .resize(800)
       .toBuffer();
 
-    // Verificar que la imagen no esté bloqueada antes de continuar
     const base64String = resizedImageBuffer.toString('base64');
-    
+
     return {
       name: image,
-      data: base64String // Convertir a base64 para enviar como JSON
+      data: base64String
     };
   }));
 
