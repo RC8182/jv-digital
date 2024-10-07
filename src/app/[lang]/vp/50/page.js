@@ -41,7 +41,7 @@ export default function Home({params}) {
           <Portada1 datos={selectedDatos.portada} fuente={'font-dancing'} />
         </div>
         
-        <h1 className="text-4xl text-[#cb8f22] text-center font-bold m-8">{selectedDatos.evento.titulo}</h1>
+        <h1 className="font-dancing text-5xl text-[#cb8f22] text-center font-bold m-8">{selectedDatos.evento.titulo}</h1>
   
         <div className="text-gray-500 text-center mb-8">
           <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
@@ -62,18 +62,16 @@ export default function Home({params}) {
           </div>
         </div>
   
-        <div className=''>
-          <h1 className="text-4xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.traer.titulo}</h1>
-          <ul className="flex flex-col m-8 list-disc list-inside custom-list-50">
-            {selectedDatos.traer.lista.map((item, index) => <li key={index}>{item}</li>)}
-          </ul>
-        </div>
   
-        <h1 className="text-4xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.titulo}</h1>
+        <h1 className="font-dancing text-5xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.titulo}</h1>
         {/* Componente para subir fotos */}
-        <UploadPhoto onUpload={loadImages} idioma={idioma} nombreDeLaPagina={nombreDeLaPagina} />
+        <UploadPhoto 
+          onUpload={loadImages} 
+          idioma={idioma} 
+          nombreDeLaPagina={nombreDeLaPagina}
+          bgboton={'bg-[#cb8f22]'} />
         
-        <h1 className="text-4xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.galeria}</h1>
+        <h1 className="font-dancing text-5xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.galeria}</h1>
 
         {/* Galería de fotos */}
         <PhotoGallery 
@@ -89,10 +87,11 @@ export default function Home({params}) {
       <div className="w-full z-50">
         <div className="bg-black fixed bottom-0  border-t-2 border-[#cb8f22] rounded-t-lg overflow-hidden w-full max-w-[900px] mx-auto">
           <div className="flex m-2 items-center justify-between text-white">
-            <Asistire idioma={idioma} telefono={''} />
+            {/* <Asistire idioma={idioma} telefono={''} /> */}
             
-            <NoAsistire idioma={idioma} telefono={''} bgcolor={''} color={'text-white'} />
+            {/* <NoAsistire idioma={idioma} telefono={''} bgcolor={''} color={'text-white'} /> */}
             <Direccion idioma={idioma} bgcolor={''} color={'text-white'}/>
+            <UploadPhoto onUpload={loadImages} idioma={idioma} nombreDeLaPagina={nombreDeLaPagina} />
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-export default function Portada({ datos, fuente }) {
+export default function Portada({ datos }) {
   const img = datos.bg_img;         // Imagen de fondo
   const imgParallax = datos.paralallx_img; // Segunda imagen que se irá revelando
   const [scrollY, setScrollY] = useState(0);
@@ -20,9 +20,8 @@ export default function Portada({ datos, fuente }) {
   }, []);
 
   return (
-    <div className={fuente}>
-      {/* Contenedor de la imagen de fondo */}
-      {/* Contenedor de la imagen de fondo */}
+    <div>
+
       <div
         className="relative h-screen  bg-contain bg-center bg-fixed"  // Padding adicional
         style={{

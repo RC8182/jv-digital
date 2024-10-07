@@ -14,16 +14,6 @@ export const datos = {
       lugar: "Lugar: Playa La Jaquita",
       horaFin: "Hora de Finalización: 8:00 PM",
     },
-    traer: {
-      titulo: "No olvides traer:",
-      lista: [
-        "Bañador, toalla y ropa de recambio",
-        "Protección Solar",
-        "Si deseas puedes traer tus juegos de playa",
-        "Toalla",
-        "Muchas ganas de divertirte!",
-      ],
-    },
     recuerdos: {
       titulo: "Comparte tus recuerdos!",
       galeria: "Galería de Fotos",
@@ -48,16 +38,6 @@ export const datos = {
       lugar: "Location: La Jaquita Beach",
       horaFin: "End Time: 8:00 PM",
     },
-    traer: {
-      titulo: "Don't forget to bring:",
-      lista: [
-        "Swimsuit, towel, and change of clothes",
-        "Sunscreen",
-        "You can bring your beach games if you'd like",
-        "Towel",
-        "Be ready to have lots of fun!",
-      ],
-    },
     recuerdos: {
       titulo: "Share your memories!",
       galeria: "Photo Gallery",
@@ -81,16 +61,6 @@ export const datos = {
       horaInicio: "Orario di Inizio: 17:00",
       lugar: "Luogo: Spiaggia La Jaquita",
       horaFin: "Orario di Fine: 20:00",
-    },
-    traer: {
-      titulo: "Non dimenticare di portare:",
-      lista: [
-        "Costume da bagno, asciugamano e cambio di vestiti",
-        "Crema solare",
-        "Se vuoi, puoi portare i tuoi giochi da spiaggia",
-        "Asciugamano",
-        "Tanta voglia di divertirti!",
-      ],
     },
     recuerdos: {
       titulo: "Condividi i tuoi ricordi!",
