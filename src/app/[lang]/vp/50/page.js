@@ -56,14 +56,17 @@ export default function Home({params}) {
             <FaMapMarkerAlt className="text-[#cb8f22]" />
             <p className="text-lg">{selectedDatos.evento.lugar}</p>
           </div>
-          <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+          {/* <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
             <FaHourglassEnd className="text-[#cb8f22]" />
             <p className="text-lg">{selectedDatos.evento.horaFin}</p>
-          </div>
+          </div> */}
+        </div>
+        <div className="">
+        <h2 className="font-dancing text-xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.tema}</h2>
         </div>
   
   
-        <h1 className="font-dancing text-5xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.titulo}</h1>
+        <h2 className="font-dancing text-5xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.titulo}</h2>
         {/* Componente para subir fotos */}
         <UploadPhoto 
           onUpload={loadImages} 
@@ -71,7 +74,7 @@ export default function Home({params}) {
           nombreDeLaPagina={nombreDeLaPagina}
           bgboton={'bg-[#cb8f22]'} />
         
-        <h1 className="font-dancing text-5xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.galeria}</h1>
+        <h2 className="font-dancing text-5xl text-[#cb8f22] text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.galeria}</h2>
 
         {/* Galería de fotos */}
         <PhotoGallery 
@@ -90,7 +93,11 @@ export default function Home({params}) {
             {/* <Asistire idioma={idioma} telefono={''} /> */}
             
             {/* <NoAsistire idioma={idioma} telefono={''} bgcolor={''} color={'text-white'} /> */}
-            <Direccion idioma={idioma} bgcolor={''} color={'text-white'}/>
+            <Direccion 
+              idioma={idioma} 
+              bgcolor={''} 
+              color={'text-white'}
+              address={'https://www.google.es/maps/place/Lido+Beach+Club+Baveno/@45.913307,8.5022583,17z/data=!4m14!1m7!3m6!1s0x4785dfc1d79614cd:0x85599d5b02035eb9!2sLido+Beach+Club+Baveno!8m2!3d45.9133033!4d8.5048332!16s%2Fg%2F1w0j31m2!3m5!1s0x4785dfc1d79614cd:0x85599d5b02035eb9!8m2!3d45.9133033!4d8.5048332!16s%2Fg%2F1w0j31m2?hl=ES&entry=ttu&g_ep=EgoyMDI0MTAwMi4xIKXMDSoASAFQAw%3D%3D'} />
             <UploadPhoto onUpload={loadImages} idioma={idioma} nombreDeLaPagina={nombreDeLaPagina} />
           </div>
         </div>
