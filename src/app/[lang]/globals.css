@@ -11,36 +11,7 @@
     background: linear-gradient(130deg, #2870EA 20%, #1B4AEF 77.5%);
 }
 
-.custom-rounded-corner {
-    position: relative;
-    overflow: hidden;
-}
 
-.custom-rounded-corner::before {
-  content: '';
-  position: absolute;
-  top: -50px;
-  right: -50px;
-  width: 400px;
-  height: 250px;
-  border-radius: 80%;
-  background-image: url('/photos/portada.png');
-  background-size: cover;
-  background-position: center;
-  border: 10px solid white; /* Agrega un borde blanco grueso */
-  margin-top: 180px;
-}
-
-@media (max-width: 768px) {
-  .custom-rounded-corner::before {
-    position: static;
-    width: 300px;
-    height: 150px;
-    margin: 0 auto;
-    border-radius: 50%;
-    border: 10px solid white; /* Agrega un borde blanco grueso */
-  }
-}
 .custom-list li {
   @apply text-black; /* Color del texto */
 }
@@ -55,4 +26,41 @@
 
 .custom-list-50 li::marker {
   color:#cb8f22; /* Color de los puntos */
+}
+
+/* Global styles for the parallax effect */
+
+/* Fondo de la imagen parallax */
+.parallax-container {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-overflow-scrolling: touch; /* Mejora la experiencia de scroll en iOS */
+  overflow: hidden;
+}
+
+/* Imagen secundaria que se desplaza al hacer scroll */
+.parallax-img {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  min-width: 350px;
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+/* Estilos específicos para iOS */
+@supports (-webkit-touch-callout: none) {
+  .parallax-container {
+    background-attachment: scroll; /* Alternativa si 'fixed' no funciona en iOS */
+  }
+}
+
+/* Compatibilidad con dispositivos móviles */
+@media screen and (max-width: 768px) {
+  .parallax-img {
+    max-width: 100%;
+  }
 }

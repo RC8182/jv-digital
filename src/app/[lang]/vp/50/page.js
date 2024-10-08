@@ -1,8 +1,6 @@
 'use client';
 
-import { Asistire } from '@/components/virtualParty/botones/asistire';
 import { Direccion } from '@/components/virtualParty/botones/ir';
-import { NoAsistire } from '@/components/virtualParty/botones/noAsistire';
 import Footer from '@/components/virtualParty/footer';
 import UploadPhoto from '@/components/virtualParty/UploadPhoto';
 import React, { useEffect, useState } from 'react';

@@ -8,27 +8,25 @@ export default function Portada({ datos }) {
   // Manejar el scroll
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = document.documentElement.scrollTop;
-      setScrollY(scrollTop);
+      requestAnimationFrame(() => {
+        const scrollTop = document.documentElement.scrollTop;
+        setScrollY(scrollTop);
+      });
     };
-  
+   
     window.addEventListener('scroll', handleScroll);
-  
+   
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
   return (
     <div>
       {/* Contenedor con fondo parallax */}
       <div
-        className="relative h-screen bg-contain bg-center bg-fixed"
+        className="relative h-screen bg-contain bg-center bg-fixed parallax-container"
         style={{
-          backgroundImage: `url(${img.src})`,  // Imagen de fondo
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'contain',  // Ajuste a la pantalla completa
+          backgroundImage: `url(${img.src})`,
         }}
       >
         {/* Imagen secundaria que se revelará al hacer scroll */}
@@ -37,25 +35,18 @@ export default function Portada({ datos }) {
             className="m-4 text-center absolute bottom-0 left-0 right-0"
             style={{
               height: '100%',
-              overflow: 'hidden',  // Limitar la visualización inicial
+              overflow: 'hidden',
               transition: 'transform 0.1s ease-out',
             }}
           >
             <img
-              src={imgParallax.src}  // Segunda imagen que se va revelando
+              src={imgParallax.src}
               alt="Imagen secundaria"
+              className="parallax-img"
               style={{
-                position: 'absolute',
-                bottom: `${-scrollY * -1}px`,  // La imagen empieza desde la parte inferior del fondo
-                left: '0',
-                right: '0',
-                margin: '0 auto',
-                width: '100%',
-                maxWidth: '1000px',  // Limitar el ancho si es necesario
-                minWidth: '350px',
-                transform: `translateY(${Math.max(0, 300 - scrollY)}px)`,  // Subida progresiva de la imagen
-                opacity: scrollY < 250 ? 1 : 0,  // Desaparece después de un punto
-                transition: 'opacity 0.5s ease-out',
+                bottom: `${-scrollY * -1}px`,
+                transform: `translateY(${Math.max(0, 300 - scrollY)}px)`,
+                opacity: scrollY < 250 ? 1 : 0,
               }}
             />
           </div>
