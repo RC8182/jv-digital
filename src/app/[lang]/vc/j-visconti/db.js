@@ -1,6 +1,6 @@
 const nombre= 'Javier Visconti'
 const email= 'javiervisconti@hotmail.com'
-const tel= '+34648416513'
+const tel= '34648416513'
 const direccion= 'Los Abrigos, Tenerife'
 export const data= {
     'es':{
@@ -67,7 +67,23 @@ export const data= {
               features: ['Asistencia Remota', 'Translado a Domicilio'],
               checkbox:false
             },
-          ]
+          ],
+          vcard:{
+            datos:[
+              "BEGIN:VCARD",
+              "VERSION:3.0",
+              "N:Visconti;Javier;;;",
+              "FN:Javier Visconti",
+              "ORG:JV-Digital",
+              "TITLE:Informática, Programación y Gestión Integral de Redes Sociales",
+              "TEL;TYPE=WORK,VOICE:+34 648416513",
+              "EMAIL:info.jv.digital@gmail.com",
+              "ADR;TYPE=WORK:;;Calle Caracol nº3, Los Abrigos;Tenerife;;38618;España",
+              "URL:https://jv-digital.com/",
+              "END:VCARD"
+            ],
+            name:'Javier_Visconti.vcf'
+          }
     },
     'en':{
         idioma:'en',
@@ -132,7 +148,23 @@ export const data= {
               features: ['Remote Assistance', 'Home Transfer'],
               checkbox: false
             },
-          ]
+          ],
+          vcard:{
+            datos:[
+              "BEGIN:VCARD",
+              "VERSION:3.0",
+              "N:Visconti;Javier;;;",
+              "FN:Javier Visconti",
+              "ORG:JV-Digital",
+              "TITLE:IT, Programming, and Comprehensive Social Media Management",
+              "TEL;TYPE=WORK,VOICE:+34 648416513",
+              "EMAIL:info.jv.digital@gmail.com",
+              "ADR;TYPE=WORK:;;Calle Caracol nº3, Los Abrigos;Tenerife;;38618;España",
+              "URL:https://jv-digital.com/",
+              "END:VCARD"
+            ],
+            name:'Javier_Visconti.vcf'
+          }
           
     },
     'it':{
@@ -198,7 +230,23 @@ export const data= {
               features: ['Assistenza remota', 'Trasferimento a domicilio'],
               checkbox: false
             },
-          ]
+          ],
+          vcard:{
+            datos:[
+              "BEGIN:VCARD",
+              "VERSION:3.0",
+              "N:Visconti;Javier;;;",
+              "FN:Javier Visconti",
+              "ORG:JV-Digital",
+              "TITLE:Informatica, Programmazione e Gestione Integrale dei Social Media",
+              "TEL;TYPE=WORK,VOICE:+34 648416513",
+              "EMAIL:info.jv.digital@gmail.com",
+              "ADR;TYPE=WORK:;;Calle Caracol nº3, Los Abrigos;Tenerife;;38618;España",
+              "URL:https://jv-digital.com/",
+              "END:VCARD"
+            ],
+            name:'Javier_Visconti.vcf'
+          }
           
     }
 }

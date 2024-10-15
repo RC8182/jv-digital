@@ -2,7 +2,7 @@ import { VirtualCard } from "@/components/virtualCard/virtualCard";
 import {data} from './db'
 
 export default function Vcj({params}) {
-  const idioma= params.lang;
+  const idioma= params.lang || 'es';
   return (
     <div>
       <meta name="google-site-verification" content="6Wleb1gKWBvvhDhTruIXhwFweF4P7KhhoVpZ-UM1-y4" />

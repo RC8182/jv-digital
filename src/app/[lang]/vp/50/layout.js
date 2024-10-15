@@ -1,17 +1,35 @@
-// This metadata object will automatically populate the <head> section
+import React from 'react';
+
+
 export const metadata = {
-  title: "Cumple Caro y Alessia!",
-  description: "",
-  metadataBase: new URL('https://jv-digital.com/es/vp/50'), // Define la base de la URL
-  // You can add other meta tags or settings here as needed
+  es:{
+    title: "Festa 50 Alessia & Carol!",
+    description:''
+  },
+  en:{
+    title: "Festa 50 Alessia & Carol!",
+    description:''
+  },
+  it:{
+    title: "Festa 50 Alessia & Carol!",
+    description:''
+  }  
 };
 
-export default function PartyCardLayout({ children, params }) {
-  const idioma= params.lang;
 
+export default function VcLayout({ children, params }) {
+  const idioma= params.lang;
+  const { title, description } = metadata[idioma];
   return (
-    <div lang={idioma}>
-      <div>{children}</div>
-    </div>
+    <html lang={idioma}>
+      <head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+      </head>
+      <body>
+        {children}
+      </body>
+    </html>
   );
 }
+

@@ -1,29 +1,38 @@
+import React from 'react';
 
-// This metadata object will automatically populate the <head> section
+
 export const metadata = {
-  title: "Cumple de Fabrizio!",
-  description: "Hola Soy Fabrizio y quería invitarte a mi Cumple Playa el 29-08-2024",
-  openGraph: {
+  es: {
     title: "Cumple de Fabrizio!",
     description: "Hola Soy Fabrizio y quería invitarte a mi Cumple Playa el 29-08-2024",
-    images: [
-      {
-        url: "/public/portada/portada.png",
-        alt: "Imagen de la portada del Cumple de Fabrizio",
-      },
-    ],
-    type: "website",
-    url: "https://jv-digital.com/es/vp/fabrizio", // You can dynamically set this if necessary
   },
-  metadataBase: new URL('https://jv-digital.com/es/vp/fabrizio'), // Define la base de la URL
-  // You can add other meta tags or settings here as needed
+  en: {
+    title: "Fabrizio's Birthday!",
+    description: "Hi, I'm Fabrizio and I wanted to invite you to my Beach Birthday Party on 29-08-2024",
+  },
+  it: {
+    title: "Compleanno di Fabrizio!",
+    description: "Ciao, sono Fabrizio e volevo invitarti alla mia Festa di Compleanno in Spiaggia il 29-08-2024",
+  }
 };
 
-export default function PartyCardLayout({ children }) {
+
+
+export default function VcLayout({ children, params }) {
+  const idioma= params.lang;
+  const { title, description } = metadata[idioma];
   return (
-    <div lang="es">
-      <div>{children}</div>
-      
-    </div>
+    <html lang={idioma}>
+      <head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+      </head>
+      <body>
+        {children}
+      </body>
+    </html>
   );
 }
+
+
+

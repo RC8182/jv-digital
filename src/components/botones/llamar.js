@@ -4,7 +4,7 @@ import Link from 'next/link';
 export const Llamar = ({title, numero}) => {
   return (
     <div>
-        <Link href={`tel:${numero}`} passHref>
+        <Link href={`tel:+${numero}`} passHref>
           {title}
         </Link>
     </div>

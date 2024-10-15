@@ -30,7 +30,7 @@ export const VirtualCard = ({db}) => {
             <div className="flex items-center justify-between gap-8 text-white h-10 p-4 bg-gpt_blue w-full">
               <Compartir title={db.botones.compartir}/>
               <Idiomas/>
-              <Guardar title={db.botones.guardar}/>
+              <Guardar title={db.botones.guardar} vcdata={db.vcard}/>
             </div>
           </div>
           <div className=" p-8 shadow-lg rounded-b-lg w-full">
@@ -72,7 +72,7 @@ export const VirtualCard = ({db}) => {
                   <p><Link href="https://arena-negra-restaurant.com" target="_blank">Arena Negra Restaurante</Link></p>
                   <p><Link href="https://la-nina-restaurante.com" target="_blank">La Niña Restaurante</Link></p>
                   <p><Link href="#">La Cañita Restaurante</Link></p>
-                  <p><Link href="https://tenerife-kite-foil.com"target="_blank">Tenerife Kite Wing</Link></p>
+                  <p><Link href="https://tenerife-kite-foil.com"target="_blank">Tenerife Kite Foil</Link></p>
                 </div>
               </div>
               <hr className="divider border-t-2 border-gpt_blue m-2" />

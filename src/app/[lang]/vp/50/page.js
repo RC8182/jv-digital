@@ -11,9 +11,9 @@ import Portada1 from '@/components/virtualParty/portada/portada1';
 import ScrollToTopButton from '@/components/scrollUp';
 
 export default function Home({params}) {
-  const idioma = params.lang;
+  const idioma = params.lang || 'it';
   const nombreDeLaPagina = '50'; // Aquí ajusta dinámicamente si es necesario
-  const selectedDatos = datos[idioma] || datos['es'];
+  const selectedDatos = datos[idioma];
 
   // Estado para almacenar las imágenes
   const [images, setImages] = useState([]);

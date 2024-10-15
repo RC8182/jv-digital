@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-
+ 
 export default function Portada({ datos }) {
   const img = datos.bg_img;         // Imagen de fondo
   const imgParallax = datos.paralallx_img; // Segunda imagen que se irá revelando
   const [scrollY, setScrollY] = useState(0);
-
+ 
   // Manejar el scroll
   useEffect(() => {
     const handleScroll = () => {
@@ -13,13 +13,15 @@ export default function Portada({ datos }) {
         setScrollY(scrollTop);
       });
     };
-   
+ 
     window.addEventListener('scroll', handleScroll);
-   
+ 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+ 
+ 
   return (
     <div>
       {/* Contenedor con fondo parallax */}
@@ -52,7 +54,7 @@ export default function Portada({ datos }) {
           </div>
         </div>
       </div>
-
+ 
       {/* Sección de contenido adicional */}
       <div className="seccion h-auto items-center justify-center px-5"></div>
     </div>

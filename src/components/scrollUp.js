@@ -1,8 +1,7 @@
 'use client'
 import { useEffect, useState } from "react";
 import { BiChevronUp } from "react-icons/bi";
-import AOS from "aos"; // Importa AOS
-import "aos/dist/aos.css"; // Importa los estilos de AOS
+
 
 const ScrollToTopButton = ({color, bgcolor,bordercolor}) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,13 +25,7 @@ const ScrollToTopButton = ({color, bgcolor,bordercolor}) => {
         behavior: "smooth",
       });
   };
-      // Inicializar AOS cuando el componente se monte
-    useEffect(() => {
-      AOS.init({
-        duration: 500, // Duración de la animación
-        once: false, // Para animar solo una vez
-      });
-    }, []);
+
 
   return (
     <button

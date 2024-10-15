@@ -1,18 +1,11 @@
  'use client'
 import React, { useEffect, useState } from 'react';
 import image from '/public/importancia/img.png';
-// import AOS from "aos"; // Importa AOS
-// import "aos/dist/aos.css"; // Importa los estilos de AOS
+
 
 const EmpresaOnline = ({ idioma }) => {
   const [showPopup, setShowPopup] = useState(false);
-    // Inicializar AOS cuando el componente se monte
-    // useEffect(() => {
-    //   AOS.init({
-    //     duration: 500, // Duración de la animación
-    //     once: false, // Para animar solo una vez
-    //   });
-    // }, []);
+
 
   const contenido = {
     es: {

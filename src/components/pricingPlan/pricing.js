@@ -138,7 +138,7 @@ const PricingPlans = ({ db }) => {
                     </li>
                   ))}
                 </ul>
-                <a href="https://api.whatsapp.com/send/?phone=34648416513" target="_blank" className="block w-full py-3 px-6 text-center rounded-md text-white font-medium bg-gradient-to-r from-logo1 to-logo2 hover:from-logo1 hover:to-logo2">
+                <a href={`https://api.whatsapp.com/send/?phone=${db.agente.tel}`} target="_blank" className="block w-full py-3 px-6 text-center rounded-md text-white font-medium bg-gradient-to-r from-logo1 to-logo2 hover:from-logo1 hover:to-logo2">
                   {t.contact}
                 </a>
               </div>

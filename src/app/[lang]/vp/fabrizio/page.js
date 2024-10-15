@@ -12,9 +12,9 @@ import PhotoGallery from '@/components/virtualParty/photoGallery/photoGallery';
 import ScrollToTopButton from '@/components/scrollUp';
 
 export default function Home({ params }) {
-  const idioma = params.lang;
+  const idioma = params.lang || 'es';
   const nombreDeLaPagina = 'fabrizio'; // Aquí ajusta dinámicamente si es necesario
-  const selectedDatos = datos[idioma] || datos['es'];
+  const selectedDatos = datos[idioma];
 
   // Estado para almacenar las imágenes
   const [images, setImages] = useState([]);
@@ -62,7 +62,7 @@ export default function Home({ params }) {
         </div>
 
         <div className="flex justify-center">
-          <Direccion />
+          <Direccion idioma={idioma} bgcolor={'bg-blue-500'} color={'text-white'} />
         </div>
 
         <div className=''>
@@ -75,7 +75,7 @@ export default function Home({ params }) {
         <h1 className="text-4xl text-blue-500 text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.titulo}</h1>
         
         {/* Componente para subir fotos */}
-        <UploadPhoto onUpload={loadImages} idioma={idioma} nombreDeLaPagina={nombreDeLaPagina} />
+        <UploadPhoto onUpload={loadImages} idioma={idioma} nombreDeLaPagina={nombreDeLaPagina}  bgboton={'bg-blue-500'} />
 
         {/* Galería de fotos */}
         <h1 className="text-4xl text-blue-500 text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.galeria}</h1>
