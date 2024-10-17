@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic'; // Para cargar componentes de manera dinámica
 import EmpresaOnline from '@/components/importancia';
 import { Slaider } from '@/components/carrucel/slaider';
 import { datos } from '@/components/carrucel/db';
@@ -9,10 +8,8 @@ import About from '@/components/about';
 import GoogleAnalytics from './googleAnalytics';
 import ScrollToTopButton from '@/components/scrollUp';
 import PortadaSection from '@/components/portada/1/portada';
+import IFrameComponent from '@/components/iFrameComponent';
 
-
-// Importar IFrameComponent dinámicamente
-const IFrameComponent = dynamic(() => import('@/components/iFrameComponent'), { ssr: false });
 
 
 const traducciones = {
@@ -56,7 +53,7 @@ export default function Home({ params }) {
         </section>
         <section className="bg-blue-900 mt-4 mb-4">
           <h2 className="text-metal text-center text-4xl p-4">{virtualCards}</h2>
-          <IFrameComponent src={`https://jv-digital.com/${idioma}/vp/fabrizio`} />
+          <IFrameComponent src={`https://jv-digital.com/${idioma}/vp/50`} />
         </section>
         <About idioma={idioma} />
         <Footer idioma={idioma} />

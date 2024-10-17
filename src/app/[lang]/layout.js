@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import { Inter, Dancing_Script, Roboto_Mono } from 'next/font/google';
 import './globals.css';
 import InitAnimations from '@/components/InitAnimations';
@@ -39,8 +38,9 @@ export const metadata = {
 
 
 export default function RootLayout({ children, params }) {
-  const idioma= params.lang || 'es';
+  const idioma = params.lang || 'es';
   const { title, description } = metadata[idioma];
+
   return (
     <html lang={idioma}>
       <head>
@@ -48,8 +48,9 @@ export default function RootLayout({ children, params }) {
         <meta name="description" content={description} />
       </head>
       <body className={`${inter.variable} ${roboto_mono.variable} ${dancingScript.variable}`}>
-        {children}
+        {/* Inicializa AOS antes de renderizar el contenido */}
         <InitAnimations />
+        {children}
       </body>
     </html>
   );

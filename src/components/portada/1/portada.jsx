@@ -1,6 +1,5 @@
 "use client";
 import "../1/style.css";
-import Link from "next/link";
 import Image from "next/image";
 import "swiper/swiper-bundle.css";
 import Line from "/public/images/banner/banner-line.png";
