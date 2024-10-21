@@ -104,7 +104,7 @@ const PortadaSection = ({idioma}) => {
               <div
                 className="slide-bg"
                 style={{
-                  backgroundImage: "url(/photos/hero/jv-digital-fondo.png)",
+                  backgroundImage: "linear-gradient(to bottom, navy, black, navy)",
                 }}
               ></div>
               <div className="container">

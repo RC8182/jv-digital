@@ -1,0 +1,152 @@
+/* Footer area start here */
+.footer-area {
+  overflow: hidden;
+  position: relative;
+}
+
+.footer__wrp {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .footer__wrp {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+}
+
+.footer__shape-solid-left, 
+.footer__shape-regular-left, 
+.footer__shape-solid-right, 
+.footer__shape-regular-right {
+  position: absolute;
+  top: 0;
+}
+
+.footer__shape-regular-left {
+  top: 30px;
+}
+
+.footer__shape-solid-right,
+.footer__shape-regular-right {
+  right: 0;
+}
+
+.footer__shadow-shape {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  animation: footer__shadow 10s linear infinite alternate;
+}
+
+.footer__item {
+  position: relative;
+}
+
+.footer__item .logo {
+  margin-top: -30px;
+}
+
+@media (max-width: 576px) {
+  .footer__item .logo {
+    margin-top: 0;
+  }
+}
+
+.footer-title {
+  margin-bottom: 30px;
+  color: var(--white);
+}
+
+.footer__item ul li {
+  margin-bottom: 15px;
+}
+
+.footer__item ul li a {
+  color: var(--white);
+  opacity: 0.8;
+}
+
+.footer__item ul li a:hover {
+  color: var(--primary-color);
+  padding-left: 5px;
+}
+
+.footer-contact li {
+  display: flex;
+  gap: 15px;
+  color: var(--white);
+}
+
+.footer-contact li i {
+  font-size: 24px;
+}
+
+.footer-contact li h5 {
+  color: var(--white);
+}
+
+.footer__item p {
+  color: var(--white);
+  opacity: 0.8;
+}
+
+.footer__item.item-big {
+  max-width: 270px;
+}
+
+.footer__item.item-sm {
+  max-width: 170px;
+}
+
+.footer__item .social-icon {
+  margin-top: 30px;
+  display: flex;
+  gap: 7px;
+}
+
+.footer__item .social-icon a {
+  border: 1px solid rgba(227, 227, 227, 0.2);
+  color: var(--white);
+  transition: background-color 0.3s ease;
+}
+
+.footer__item .social-icon a:hover {
+  background-color: var(--primary-color);
+}
+
+.footer__copyright {
+  position: relative;
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer__copyright p {
+  color: var(--white);
+  opacity: 0.8;
+}
+
+.footer__copyright a {
+  color: var(--white);
+  opacity: 0.8;
+}
+
+.footer__copyright a:hover {
+  color: var(--primary-color);
+}
+
+@keyframes footer__shadow {
+  0% {
+    transform: translate(-50%, 0);
+  }
+  100% {
+    transform: translate(-50%, 10px);
+  }
+}
+
+/* Footer area end here */

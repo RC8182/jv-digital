@@ -24,6 +24,8 @@ RUN npm install && \
     npm install fslightbox-react &&\
     npm install swiper &&\
     npm install multer &&\
+    npm i sass &&\
+    npm install bootstrap &&\
     npx tailwindcss init -p && \
     npm run build
 

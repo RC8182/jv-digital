@@ -5,6 +5,112 @@
 /* styles/globals.css */
 
 
+/* Global section area start */
+.section-area {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.section__shape-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  opacity: 0.3;
+}
+
+.section__shape-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0.3;
+}
+
+.section__shadow {
+  position: absolute;
+  z-index: -1;
+}
+
+.section__icon {
+  border-radius: 70px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #3c72fc -210.71%, #00060c 100%);
+  margin-top: -35px;
+  transition: 1s;
+}
+
+.section__item {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  padding-top: 0;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.section__item .shape-top {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+.section__item .shape-bottom {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+.section__item:hover .shape-top {
+  top: -1px;
+  right: -1px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.section__item:hover .shape-bottom {
+  bottom: -1px;
+  left: -1px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.section__item:hover .section__icon {
+  background: var(--gradient-bg);
+  transform: rotateY(360deg);
+}
+
+.section__item:hover .section__icon svg path {
+  fill: #fff;
+}
+
+.section__container {
+  max-width: 1600px;
+  padding: 0 15px;
+  margin: 0 auto;
+}
+
+.section-header h2 {
+  padding-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.section-header h2 {
+  text-transform: capitalize;
+}
+
+.section-header p {
+  margin-top: 30px;
+}
+/* Global section area end */
+
 /* Aplicamos la fuente globalmente */
 
 .bg-gpt_balanced {
