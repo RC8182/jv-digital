@@ -8,6 +8,7 @@ import Six from "/public/images/shape/offter-item-shape-bottom.png";
 
 // Importamos iconos de React Icons
 import { FaFacebookF, FaInstagram, FaTripadvisor, FaGoogle, FaGlobe, FaIdCard } from 'react-icons/fa'; 
+import DeviceFrame from "./deviseIfram/deviseIframe";
 
 const Solutions = ({ idioma }) => {
   const contenido = {
@@ -200,6 +201,8 @@ const Solutions = ({ idioma }) => {
             </div>
           ))}
         </div>
+        <DeviceFrame src="https://jv-digital.com/es/vp/fabrizio" device="mobile" />
+        <DeviceFrame src="https://jv-digital.com/es/vp/fabrizio"  />
       </div>
     </section>
   );

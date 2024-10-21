@@ -1,4 +1,3 @@
-//import '/public/styles/style.scss'
 import EmpresaOnline from '@/components/importancia/importancia';
 import Navbar from '@/components/Navbar/Navbar';
 import Footer from '@/components/Footer/footer';

@@ -1,4 +1,5 @@
 import React from 'react';
+import './styles.css'; // Asegúrate de importar tu archivo CSS
 
 const DeviceFrame = ({ src, device }) => {
   const frameStyle = {
@@ -11,7 +12,7 @@ const DeviceFrame = ({ src, device }) => {
   };
 
   return (
-    <div style={frameStyle}>
+    <div style={frameStyle} className="device-frame">
       <iframe
         src={src}
         style={{ width: '100%', height: '100%', border: 'none' }}
