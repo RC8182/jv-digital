@@ -7,14 +7,18 @@ import Three from "/public/images/shape/offer-bg-shape-right.png";
 // Importamos iconos de React Icons
 
 import DeviceFrame from "@/components/deviseIfram/deviseIframe";
+import CmnBanner from "@/components/cmnBanner";
 
 
 const VirtualCard = () => {
 
 
   return (
-    <section className="section-area bg-gray-900 pt-32 pb-48 mt-4">
+    <>
+    <CmnBanner title={'Virtual Cards'}/>
+        <section className="section-area bg-gray-900 pt-32 pb-48 mt-4">
       {/* Sombras e imágenes laterales */}
+      
       <div className="section__shape-left" data-aos="fade-left" data-aos-delay="0" data-aos-duration="1500">
         <Image className="animate-swayY" src={One} alt="Shape Left" priority />
       </div>
@@ -33,6 +37,8 @@ const VirtualCard = () => {
         <DeviceFrame src="https://jv-digital.com/es/vp/50"  />
       </div>
     </section>
+    </>
+
   );
 };
 
