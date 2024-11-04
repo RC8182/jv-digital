@@ -25,6 +25,7 @@ const translations = {
     uploadError: 'Errore durante il caricamento della foto:',
   },
 };
+
 function UploadPhoto({ onUpload, idioma, nombreDeLaPagina, bgboton }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -77,13 +78,13 @@ function UploadPhoto({ onUpload, idioma, nombreDeLaPagina, bgboton }) {
           <img
             src={previewUrl}
             alt="Preview"
-            className="w-40 h-40 object-cover rounded-lg shadow-md"
+            className="w-40 h-40 object-cover rounded-lg shadow-md xxs:w-32 xxs:h-32"
           />
         </div>
       )}
-      <label className={`${bgboton} text-white px-4 py-2 rounded cursor-pointer flex items-center space-x-2`}>
+      <label className={`${bgboton} text-white px-4 py-2 rounded cursor-pointer flex items-center space-x-2 xxs:px-2 xxs:py-1 xxs:space-x-1`}>
         <FaCamera />
-        <span>{translations[idioma].takePhoto}</span>
+        <span className="xxs:text-xxs">{translations[idioma].takePhoto}</span>
         <input
           type="file"
           accept="image/*"
@@ -94,25 +95,25 @@ function UploadPhoto({ onUpload, idioma, nombreDeLaPagina, bgboton }) {
       </label>
       {isLoading ? (
         <div className="flex items-center justify-center">
-          <ImSpinner2 className="animate-spin text-blue-600 text-3xl" />
-          <span className="ml-2 text-blue-600">{translations[idioma].uploading}</span>
+          <ImSpinner2 className="animate-spin text-blue-600 text-3xl xxs:text-2xl" />
+          <span className="ml-2 text-blue-600 xxs:text-xs">{translations[idioma].uploading}</span>
         </div>
       ) : (
         selectedFile && (
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 xxs:space-x-1">
             <button
               onClick={() => handleUpload(selectedFile)}
-              className="bg-blue-600 text-white px-4 py-2 rounded shadow-md hover:bg-blue-700 flex items-center space-x-2"
+              className="bg-blue-600 text-white px-4 py-2 rounded shadow-md hover:bg-blue-700 flex items-center space-x-2 xxs:px-2 xxs:py-1 xxs:space-x-1"
             >
               <FaThumbsUp />
-              <span>{translations[idioma].uploadPhoto}</span>
+              <span className="xxs:text-xxs">{translations[idioma].uploadPhoto}</span>
             </button>
             <button
               onClick={handleCancel}
-              className="bg-red-600 text-white px-4 py-2 rounded shadow-md hover:bg-red-700 flex items-center space-x-2"
+              className="bg-red-600 text-white px-4 py-2 rounded shadow-md hover:bg-red-700 flex items-center space-x-2 xxs:px-2 xxs:py-1 xxs:space-x-1"
             >
               <FaTimes />
-              <span>{translations[idioma].cancel}</span>
+              <span className="xxs:text-xxs">{translations[idioma].cancel}</span>
             </button>
           </div>
         )

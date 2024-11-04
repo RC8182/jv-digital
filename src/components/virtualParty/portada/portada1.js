@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
  
 export default function Portada({ datos }) {
@@ -34,17 +35,19 @@ export default function Portada({ datos }) {
         {/* Imagen secundaria que se revelará al hacer scroll */}
         <div className="contenedor-titulo absolute inset-0 bg-gray-100 bg-opacity-10 text-center">
           <div
-            className="m-4 text-center absolute bottom-0 left-0 right-0"
+            className="m-4 text-center absolute bottom-0 left-0 right-0 xxs:m-2 flex justify-center items-center"
             style={{
               height: '100%',
               overflow: 'hidden',
               transition: 'transform 0.1s ease-out',
             }}
           >
-            <img
+            <Image
               src={imgParallax.src}
               alt="Imagen secundaria"
-              className="parallax-img"
+              className="xxs:w-[200px] xxs:h-[auto] md:w-[500px] md:h-[auto]"
+              width={1000}
+              height={1000}
               style={{
                 bottom: `${-scrollY * -1}px`,
                 transform: `translateY(${Math.max(0, 300 - scrollY)}px)`,
@@ -56,7 +59,7 @@ export default function Portada({ datos }) {
       </div>
  
       {/* Sección de contenido adicional */}
-      <div className="seccion h-auto items-center justify-center px-5"></div>
+      <div className="seccion h-auto items-center justify-center px-5 xxs:px-2"></div>
     </div>
   );
 }

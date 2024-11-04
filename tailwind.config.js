@@ -41,6 +41,12 @@ module.exports = {
         dancing: ['var(--dancing-script)'],
         kumbh: ['Kumbh Sans', 'sans-serif'],
       },
+      fontSize: {
+        'xxs': '0.625rem', // 10px
+      },
+      screens: {
+        'xxs': {'max': '259px'}, // Define una nueva media query para menos de 260px
+      },
       animation: {
         'spin-slow': 'spin 20s linear infinite',
         'spin-reverse': 'spin 20s linear infinite reverse',

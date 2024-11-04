@@ -51,8 +51,8 @@ const About = ({ idioma }) => {
         <Image className="animate-swayY" src={One} alt="Shape Left" priority />
       </div>
 
-      {/* Contenido principal */}
-      <div className="mx-auto px-4">
+   {/* Contenedor principal */}
+    <div className="section__container">
         <div className="section-header mb-24 text-primary">
           <h2
             className="uppercase font-medium flex items-center"
@@ -65,16 +65,15 @@ const About = ({ idioma }) => {
             {subtitle}
           </h2>
           <h3
-            className="text-white capitalize"
+            className="text-white text-xl capitalize"
             data-aos="fade-up"
             data-aos-delay="200"
             data-aos-duration="1500"
           >
             {title}
           </h3>
-
           {/* Texto de párrafos */}
-          <div data-aos="fade-up" className="text-white mt-24">
+          <div data-aos="fade-up" className="text-white mt-8">
             <p className="mb-4">{parraf1}</p>
             <p className="mb-4">{parraf2}</p>
             <p className="mb-4">{parraf3}</p>

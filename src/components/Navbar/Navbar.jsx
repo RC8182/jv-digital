@@ -10,7 +10,11 @@ import { Idiomas } from "../botones/idiomas";
 // JSON object containing navigation links and sub-links
 const navLinks = {
   es: [
-    { name: "Inicio", path: "/", subLinks: [] },
+    { name: "Inicio", path: "/es", subLinks: [] },
+    { name: "Servicios", path: "#servicios", subLinks: [
+      { name: "Tarjetas de Invitación", path: "/es/virtual-cards" },
+      { name: "Redes Sociales", path: "/es/social-networks" },
+    ] },
     { name: "Sobre nosotros", path: "#about", subLinks: [] },
     {
       name: "Redes Sociales",
@@ -31,7 +35,11 @@ const navLinks = {
     },
   ],
   en: [
-    { name: "Home", path: "/", subLinks: [] },
+    { name: "Home", path: "/en", subLinks: [] },
+    { name: "Services", path: "#servicios", subLinks: [
+      { name: "Virtual Cards", path: "/en/virtual-cards" },
+      { name: "Social Networks", path: "/en/social-networks" },
+    ] },
     { name: "About us", path: "#about", subLinks: [] },
     {
       name: "Social Network",
@@ -52,7 +60,11 @@ const navLinks = {
     },
   ],
   it: [
-    { name: "Home", path: "/", subLinks: [] },
+    { name: "Home", path: "/it", subLinks: [] },
+    { name: "Servizi", path: "#servicios", subLinks: [
+      { name: "Carte Virtuali", path: "/it/virtual-cards" },
+      { name: "Social Networks", path: "/it/social-networks" },
+    ] },
     { name: "Chi siamo", path: "#about", subLinks: [] },
     {
       name: "Reti Sociali",

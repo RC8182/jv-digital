@@ -48,9 +48,9 @@ const Portada = ({ idioma }) => {
 
       {/* Text Content - Centramos el contenedor completo */}
       <div className="absolute w-full h-full flex flex-col justify-center items-center text-center">
-        <h4 className="text-white text-xl mb-4">{text.title}</h4>
-        <h1 className="text-[#3464E1] text-5xl font-bold mb-6">{text.slogan} <br/> {text.slogan1}</h1>
-        <p className="text-white text-lg">{text.description}</p>
+        <h4 className="text-white text-2xl md:text-4xl mb-4">{text.title}</h4>
+        <h1 className="text-[#3464E1] text-6xl md:text-8xl font-bold mb-6">{text.slogan} <br/> {text.slogan1}</h1>
+        <p className="text-white text-2xl md:text-4xl">{text.description}</p>
       </div>
     </section>
   );

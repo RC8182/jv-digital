@@ -11,12 +11,10 @@ import Portada1 from '@/components/virtualParty/portada/portada1';
 import ScrollToTopButton from '@/components/scrollUp';
 import { Asistencia } from '@/components/virtualParty/botones/asistencia';
 
-
-
 const InfoItem = ({ icon, text }) => (
-  <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+  <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4 xxs:space-y-2 xxs:flex-col">
     {icon}
-    <p className="text-lg text-blue-500">{text}</p>
+    <p className="text-lg text-blue-500 xxs:text-sm">{text}</p>
   </div>
 );
 
@@ -56,13 +54,13 @@ export default function Home({ params }) {
 
   return (
     <div className="text-blue-500">
-      <ScrollToTopButton color={'text-blue-500'} bgcolor={'bg-blue-500'} bordercolor={'border-[#cb8f22]'} />
+      <ScrollToTopButton color={'text-white'} bgcolor={'bg-blue-500'} bordercolor={'border-[#cb8f22]'} />
       <div className="min-h-screen max-w-[900px] bg-white text-black flex flex-col items-center justify-center mx-auto">
         <div className='h-full w-full'>
           <Portada1 datos={selectedDatos.portada} fuente={'font-dancing'} />
         </div>
 
-        <h1 className="font-dancing text-4xl text-blue-900 text-center font-bold m-8">{selectedDatos.evento.titulo}</h1>
+        <h1 className="font-dancing text-4xl text-blue-900 text-center font-bold m-8 xxs:text-3xl">{selectedDatos.evento.titulo}</h1>
 
         <div className="text-blue-500 text-center mb-8">
           <InfoItem icon={<FaCalendarAlt className="text-blue-500" aria-label="Fecha del evento" />} text={selectedDatos.evento.diaEvento} />
@@ -86,8 +84,8 @@ export default function Home({ params }) {
           </div>
         </div>
 
-        <h2 className="font-dancing text-3xl text-blue-900 text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.tema}</h2>
-        <h2 className="font-dancing text-2xl text-blue-900 text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.titulo}</h2>
+        <h2 className="font-dancing text-3xl text-blue-900 text-center font-bold m-8 mt-2 xxs:text-2xl">{selectedDatos.recuerdos.tema}</h2>
+        <h2 className="font-dancing text-2xl text-blue-900 text-center font-bold m-8 mt-2 xxs:text-xl">{selectedDatos.recuerdos.titulo}</h2>
 
         <UploadPhoto
           onUpload={loadImages}
@@ -96,7 +94,7 @@ export default function Home({ params }) {
           bgboton={'bg-blue-500'}
         />
 
-        <h2 className="font-dancing text-xl text-blue-900 text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.galeria}</h2>
+        <h2 className="font-dancing text-xl text-blue-900 text-center font-bold m-8 mt-2 xxs:text-lg">{selectedDatos.recuerdos.galeria}</h2>
 
         {loading ? (
           <p className="text-center text-blue-500">Cargando imágenes...</p>

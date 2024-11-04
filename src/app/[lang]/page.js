@@ -3,10 +3,9 @@ import Navbar from '@/components/Navbar/Navbar';
 import Footer from '@/components/Footer/footer';
 import About from '@/components/about/about';
 import GoogleAnalytics from './googleAnalytics';
-import Service from '@/components/Service';
 import Portada from '@/components/portada/4/portada';
 import ScrollProgressButton from '@/components/ScrollProgressButton';
-import Solutions from '@/components/Solutions';
+import Services from '@/components/Services';
 
 
 
@@ -24,8 +23,7 @@ export default function Home({ params }) {
         <Navbar idioma={idioma} />
         <Portada idioma={idioma}/>
         <EmpresaOnline idioma={idioma} />
-        {/* <Service idioma={idioma}/> */}
-         <Solutions idioma={idioma}/> 
+        <Services idioma={idioma}/> 
         <About idioma={idioma} />
         <Footer idioma={idioma} />
       </div>

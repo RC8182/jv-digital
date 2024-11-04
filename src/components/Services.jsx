@@ -7,14 +7,25 @@ import Five from "/public/images/shape/offter-item-shape-top.png";
 import Six from "/public/images/shape/offter-item-shape-bottom.png";
 
 // Importamos iconos de React Icons
-import { FaFacebookF, FaInstagram, FaTripadvisor, FaGoogle, FaGlobe, FaIdCard } from 'react-icons/fa'; 
-import DeviceFrame from "./deviseIfram/deviseIframe";
+import { FaThumbsUp, FaGlobe, FaIdCard } from 'react-icons/fa'; 
+import Link from "next/link";
 
-const Solutions = ({ idioma }) => {
+const Ir = ({url, idioma}) => {
+  const titulo= (idioma === 'es')? 'Ver': (idioma === 'en')? 'See':'Vedi';
+  return (
+    <Link href={`${idioma}/${url}`} className="text-primary border border-gray rounded-md m-4 p-2">
+        {titulo}
+    </Link>
+  )
+}
+
+
+
+const Services = ({ idioma }) => {
   const contenido = {
     es: {
       title: "Impulsa el Progreso con las Últimas Tendencias Tecnológicas",
-      subtitle: "Soluciones",
+      subtitle: "Servicios",
       solutions: {
         website: {
           label: "Sitios Web",
@@ -25,26 +36,14 @@ const Solutions = ({ idioma }) => {
           hoverLabel: "Creamos tarjetas personalizadas",
         },
         facebook: {
-          label: "Facebook",
-          hoverLabel: "Gestionamos tu Facebook",
-        },
-        instagram: {
-          label: "Instagram",
-          hoverLabel: "Mejoramos tu Instagram",
-        },
-        google: {
-          label: "Google My Business",
-          hoverLabel: "Optimiza tu perfil de Google",
-        },
-        trip: {
-          label: "Trip Advisor",
-          hoverLabel: "Impulsamos tu negocio",
+          label: "Redes Sociales",
+          hoverLabel: "Gestionamos tus Redes Sociales",
         },
       },
     },
     en: {
       title: "Drive Progress with the Latest Technology Trends",
-      subtitle: "Solutions",
+      subtitle: "Services",
       solutions: {
         website: {
           label: "Websites",
@@ -55,26 +54,14 @@ const Solutions = ({ idioma }) => {
           hoverLabel: "We create personalized cards",
         },        
         facebook: {
-          label: "Facebook",
-          hoverLabel: "We manage your Facebook",
-        },
-        instagram: {
-          label: "Instagram",
-          hoverLabel: "We enhance your Instagram",
-        },
-        google: {
-          label: "Google My Business",
-          hoverLabel: "Optimize your Google profile",
-        },
-        trip: {
-          label: "Trip Advisor",
-          hoverLabel: "We boost your business",
+          label: "Social Networks",
+          hoverLabel: "We manage your Social Networks",
         },
       },
     },
     it: {
       title: "Promuovi il Progresso con le Ultime Tendenze Tecnologiche",
-      subtitle: "Soluzioni",
+      subtitle: "Servizi",
       solutions: {
         website: {
           label: "Siti Web",
@@ -85,21 +72,10 @@ const Solutions = ({ idioma }) => {
           hoverLabel: "Creiamo biglietti personalizzati",
         },
         facebook: {
-          label: "Facebook",
-          hoverLabel: "Gestiamo il tuo Facebook",
+          label: "Social Media",
+          hoverLabel: "Gestiamo le tue Social Medie",
         },
-        instagram: {
-          label: "Instagram",
-          hoverLabel: "Miglioriamo il tuo Instagram",
-        },
-        google: {
-          label: "Google My Business",
-          hoverLabel: "Ottimizza il tuo profilo Google",
-        },
-        trip: {
-          label: "Trip Advisor",
-          hoverLabel: "Promuoviamo il tuo business",
-        },
+
       },
     },
   };
@@ -107,7 +83,7 @@ const Solutions = ({ idioma }) => {
   const { title, subtitle, solutions } = contenido[idioma];
 
   return (
-    <section className="section-area bg-gray-900 pt-32 pb-48 mt-4">
+    <section className="section-area bg-gray-900 pt-32 pb-48 mt-4" id="servicios">
       {/* Sombras e imágenes laterales */}
       <div className="section__shape-left" data-aos="fade-left" data-aos-delay="0" data-aos-duration="1500">
         <Image className="animate-swayY" src={One} alt="Shape Left" priority />
@@ -126,54 +102,43 @@ const Solutions = ({ idioma }) => {
             <Image className="mr-2" src={Four} alt="icon" priority />
             {subtitle}
           </h2>
-          <h3 className="text-white capitalize" data-aos="fade-left" data-aos-delay="200" data-aos-duration="1500">
+          <h3 className="text-white capitalize text-xl" data-aos="fade-left" data-aos-delay="200" data-aos-duration="1500">
             {title}
           </h3>
         </div>
 
         {/* Ofertas */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8">
+        <div className="flex justify-center flex-wrap gap-8">
           {[
             {
               icon: <FaGlobe size={36} color="#3C72FC" />,
               label: solutions.website.label,
               hoverLabel: solutions.website.hoverLabel,
               delay: 0,
+              component:<Image className="mr-2" src={'/photos/services/1.svg'} width={1500} height={1500} alt="icon" priority />,
+              button:'' 
+              // <Ir idioma={idioma} url={'websites'}/>,
             },
             {
               icon: <FaIdCard size={36} color="#3C72FC" />,
               label: solutions.cards.label,
               hoverLabel: solutions.cards.hoverLabel,
               delay: 0,
+              component:<Image className="mr-2" src={'/photos/services/2.svg'} width={1500} height={1500} alt="icon" priority />,
+              button: <Ir idioma={idioma} url={'virtual-cards'}/>,
             },
             {
-              icon: <FaFacebookF size={36} color="#3C72FC" />,
+              icon: <FaThumbsUp   size={36} color="#3C72FC" />,
               label: solutions.facebook.label,
               hoverLabel: solutions.facebook.hoverLabel,
               delay: 100,
-            },
-            {
-              icon: <FaInstagram size={36} color="#3C72FC" />,
-              label: solutions.instagram.label,
-              hoverLabel: solutions.instagram.hoverLabel,
-              delay: 200,
-            },
-            {
-              icon: <FaTripadvisor size={36} color="#3C72FC" />,
-              label: solutions.trip.label,
-              hoverLabel: solutions.trip.hoverLabel,
-              delay: 300,
-            },
-            {
-              icon: <FaGoogle size={36} color="#3C72FC" />,
-              label: solutions.google.label,
-              hoverLabel: solutions.google.hoverLabel,
-              delay: 500,
+              component:<Image className="mr-2 rounded-lg" src={'/photos/services/3.png'} width={150} height={150} alt="icon" priority />,
+              button: <Ir idioma={idioma} url={'social-networks'}/>,
             },
           ].map((offer, index) => (
             <div
               key={index}
-              className="section__item relative text-center transition-transform transform hover:scale-105 group"
+              className="section__item relative text-center transition-transform transform hover:scale-105 w-60 h-30 group hover:min-w-[300px] hover:min-h-[500px]"
               data-aos="fade-up"
               data-aos-delay={offer.delay}
               data-aos-duration="1500"
@@ -192,20 +157,22 @@ const Solutions = ({ idioma }) => {
               </div>
 
               {/* Texto con cambio en hover */}
-              <h4 className="text-white mt-5 transition-all duration-300 group-hover:opacity-0">
+              <h4 className="text-white transition-all duration-300 group-hover:opacity-0">
                 {offer.label}
               </h4>
-              <h4 className="text-white mt-5 absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+              <div className="text-white m-5 absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <h4 className="m-5">
                 {offer.hoverLabel}
-              </h4>
+                </h4>
+                {offer.component}
+                {offer.button}
+              </div>
             </div>
           ))}
         </div>
-        <DeviceFrame src="https://jv-digital.com/es/vp/fabrizio" device="mobile" />
-        <DeviceFrame src="https://jv-digital.com/es/vp/fabrizio"  />
       </div>
     </section>
   );
 };
 
-export default Solutions;
+export default Services;

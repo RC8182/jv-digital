@@ -40,24 +40,24 @@ export default function Home({ params }) {
           <ScrollToTopButton color={'text-white'} bgcolor={'bg-red-500'} bordercolor={'border-grey'} />
         </div>
 
-        <h1 className="font-dancing text-5xl text-black-500 text-center font-bold m-8">{selectedDatos.evento.titulo}</h1>
+        <h1 className="font-dancing text-5xl text-black-500 text-center font-bold m-8 xxs:text-3xl">{selectedDatos.evento.titulo}</h1>
 
         <div className="text-black text-center mb-8">
-          <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+          <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4 xxs:space-y-2 xxs:flex-col">
             <FaCalendarAlt className="text-red-500" />
-            <p className="text-lg">{selectedDatos.evento.diaEvento}</p>
+            <p className="text-lg xxs:text-sm">{selectedDatos.evento.diaEvento}</p>
           </div>
-          <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+          <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4 xxs:space-y-2 xxs:flex-col">
             <FaClock className="text-red-500" />
-            <p className="text-lg">{selectedDatos.evento.horaInicio}</p>
+            <p className="text-lg xxs:text-sm">{selectedDatos.evento.horaInicio}</p>
           </div>
-          <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+          <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4 xxs:space-y-2 xxs:flex-col">
             <FaMapMarkerAlt className="text-red-500" />
-            <p className="text-lg">{selectedDatos.evento.lugar}</p>
+            <p className="text-lg xxs:text-sm">{selectedDatos.evento.lugar}</p>
           </div>
-          <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+          <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:flex-row md:space-x-4 xxs:space-y-2 xxs:flex-col">
             <FaHourglassEnd className="text-red-500" />
-            <p className="text-lg">{selectedDatos.evento.horaFin}</p>
+            <p className="text-lg xxs:text-sm">{selectedDatos.evento.horaFin}</p>
           </div>
         </div>
 
@@ -66,17 +66,17 @@ export default function Home({ params }) {
         </div>
 
         <div>
-          <h1 className="font-dancing text-5xl text-black-500 text-center font-bold m-8 mt-2">{selectedDatos.traer.titulo}</h1>
-          <ul className="flex flex-col m-8 list-disc list-inside custom-list-sabrina5">
+          <h1 className="font-dancing text-5xl text-black-500 text-center font-bold m-8 mt-2 xxs:text-3xl">{selectedDatos.traer.titulo}</h1>
+          <ul className="flex flex-col m-8 list-disc list-inside custom-list-sabrina5 xxs:text-sm">
             {selectedDatos.traer.lista.map((item, index) => <li key={index}>{item}</li>)}
           </ul>
         </div>
 
-        <h1 className="font-dancing text-4xl text-black-500 text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.titulo}</h1>
+        <h1 className="font-dancing text-4xl text-black-500 text-center font-bold m-8 mt-2 xxs:text-2xl">{selectedDatos.recuerdos.titulo}</h1>
         
         <UploadPhoto onUpload={loadImages} idioma={idioma} nombreDeLaPagina={nombreDeLaPagina} bgboton={'bg-red-500'} />
 
-        <h1 className="font-dancing text-4xl text-black-500 text-center font-bold m-8 mt-2">{selectedDatos.recuerdos.galeria}</h1>
+        <h1 className="font-dancing text-4xl text-black-500 text-center font-bold m-8 mt-2 xxs:text-2xl">{selectedDatos.recuerdos.galeria}</h1>
         <PhotoGallery 
           images={images}  
           selectedDatos={selectedDatos} 

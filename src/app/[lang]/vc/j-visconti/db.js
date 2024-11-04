@@ -56,7 +56,7 @@ export const data= {
               firstWeekPrice: 150,
               subsequentWeeksPrice: 100,
               description: 'Gestión de Redes Sociales + Creación y Gestión de página Web',
-              features: ['2-3 post semanales', 'Alcance 13.000 Personas', 'Clicks 25', 'Gestión de Reseñas', 'Diseño y Gestión de página Web', '* Dominio Gratuito', 'Alojamiento Web Gratuito', '* Servicion Informático sin coste adicional'],
+              features: ['2-3 post semanales', 'Alcance 13.000 Personas', 'Clicks 25', 'Gestión de Reseñas', 'Diseño y Gestión de página Web', '* Dominio Gratuito', 'Alojamiento Web Gratuito', '* Servicio Informático sin coste adicional'],
               checkbox:true
             },
             {

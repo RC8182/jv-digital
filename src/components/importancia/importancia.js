@@ -51,7 +51,7 @@ const EmpresaOnline = ({ idioma }) => {
             <Image className="mr-2" src={Four} alt="icon" priority />
             {subtitle}
           </h2>
-          <h3 className="text-white capitalize" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1500">
+          <h3 className="text-white capitalize text-xl" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1500">
             {title}
           </h3>
 

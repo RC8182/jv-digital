@@ -51,11 +51,11 @@ export default function PhotoGallery({ images, selectedDatos, onImagesChange, no
     <div>
       
       {images.length === 0 ? (
-        <p className="text-lg text-gray-500">{selectedDatos.recuerdos.primerFoto}</p>
+        <p className="xxs:text-sm text-lg text-gray-500">{selectedDatos.recuerdos.primerFoto}</p>
       ) : (
         <div className="flex flex-wrap gap-4 m-2">
           {images.map((image, index) => (
-            <div key={index} className="relative w-40 h-40 overflow-hidden rounded-lg shadow-md">
+            <div key={index} className="relative xxs:w-32 xxs:h-32 w-40 h-40 overflow-hidden rounded-lg shadow-md">
               <img
                 src={`data:image/jpeg;base64,${image.data}`}
                 alt={`Uploaded ${image.name}`}

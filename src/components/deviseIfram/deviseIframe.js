@@ -3,8 +3,8 @@ import './styles.css'; // Asegúrate de importar tu archivo CSS
 
 const DeviceFrame = ({ src, device }) => {
   const frameStyle = {
-    width: device === 'mobile' ? '375px' : '800px',
-    height: device === 'mobile' ? '667px' : '450px',
+    width: device === 'mobile' ? '250px' : '800px',
+    height: device === 'mobile' ? '467px' : '450px',
     border: '10px solid black',
     borderRadius: '20px',
     overflow: 'hidden',

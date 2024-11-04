@@ -1,5 +1,3 @@
-
-
 export default function Portada({datos, fuente}) {
   const h1 = datos.h1;
   const h2 = datos.h2;
@@ -11,25 +9,24 @@ export default function Portada({datos, fuente}) {
   return (
     <div className={fuente}>
       <div className='fondo relative' 
-style={{ minWidth: '300px', minHeight: '600px', backgroundImage: `url(${img.src})`, backgroundPosition: 'top center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat' }}>
+style={{ minWidth: '200px', minHeight: '600px', backgroundImage: `url(${img.src})`, backgroundPosition: 'top center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat' }}>
         
         <div className='contenedor-titulo absolute inset-0 bg-gray-700 bg-opacity-50 text-center'>
           <div className='flex flex-col'>
-            <div className='m-4 text-4xl'>
+            <div className='m-4 text-4xl xxs:text-2xl'>
               {emojis1}
             </div>
-            <div className='titulo justify-center text-white py-12 text-4xl flex flex-col tracking-widest'>
+            <div className='titulo justify-center text-white py-12 text-4xl flex flex-col tracking-widest xxs:text-2xl'>
               <h2>{h2}</h2>
             </div>
-            <div className='flex justify-center p-4 text-lg text-white'>
+            <div className='flex justify-center p-4 text-lg text-white xxs:text-sm'>
               <h2>{sub}</h2>
             </div>
             <div className='flex flex-col justify-center w-9/10 m-auto'></div>
-            <div className='titulo  justify-center text-4xl text-white py-2 flex flex-col tracking-widest'>
+            <div className='titulo justify-center text-4xl text-white py-2 flex flex-col tracking-widest xxs:text-2xl'>
               <h1>{h1}</h1>
             </div>
-            <div className='m-4 text-center text-4xl absolute bottom-0 left-0 right-0'>
-
+            <div className='m-4 text-center text-4xl absolute bottom-0 left-0 right-0 xxs:text-2xl'>
               {emojis2}
             </div>
           </div>
