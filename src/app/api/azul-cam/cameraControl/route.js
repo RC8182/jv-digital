@@ -4,9 +4,9 @@ import axios from 'axios';
 import crypto from 'crypto';
 
 const CAMERA_IP = "azul-kite.ddns.net";
-const CAMERA_PORT = 48182;
-const USERNAME = "rc8182"; 
-const PASSWORD = "28645455Javi"; 
+const CAMERA_PORT = ;
+const USERNAME = ""; 
+const PASSWORD = ""; 
 
 // Función para manejar la autenticación Digest
 async function digestAuthRequest(url, method = 'GET') {
