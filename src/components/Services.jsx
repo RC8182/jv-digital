@@ -97,12 +97,12 @@ const Services = ({ idioma }) => {
 
       {/* Contenedor principal */}
       <div className="section__container">
-        <div className="section-header text-primary mb-16">
-          <h2 className="uppercase font-medium flex items-center" data-aos="fade-left" data-aos-duration="1500">
+        <div className="section-header text-primary mb-16 text-xl">
+          <h2 className="uppercase font-medium flex items-center">
             <Image className="mr-2" src={Four} alt="icon" priority />
             {subtitle}
           </h2>
-          <h3 className="text-white capitalize text-xl" data-aos="fade-left" data-aos-delay="200" data-aos-duration="1500">
+          <h3 className="text-white capitalize text-3xl">
             {title}
           </h3>
         </div>

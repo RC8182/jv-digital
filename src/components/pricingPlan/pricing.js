@@ -78,12 +78,12 @@ const PricingPlans = ({ db }) => {
     if (plan.plus) {
       firstWeekPrice += plus;
       subsequentWeeksPrice += plus;
-  
-      const alcanceIndex = feature.findIndex(f => f.includes('Alcance'));
+      const alcance= (idioma=== 'es')?'Alcance': (idioma=== 'en')? 'Reach':'Raggiungi';
+      const alcanceIndex = feature.findIndex(f => f.includes(alcance));
       const clicksIndex = feature.findIndex(f => f.includes('Clicks'));
   
-      if (alcanceIndex !== -1) feature[alcanceIndex] = 'Alcance 26.000 Personas';
-      if (clicksIndex !== -1) feature[clicksIndex] = 'Clicks 50';
+      if (alcanceIndex !== -1) feature[alcanceIndex] = 'Alcance 3.000 Personas';
+      if (clicksIndex !== -1) feature[clicksIndex] = 'Clicks 10';
   
       if (!feature.includes(t.planPlus)) {
         feature.unshift(t.planPlus);

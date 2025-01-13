@@ -89,12 +89,12 @@ const Footer = ({ idioma }) => {
       phone: 'Telefono',
       slogan: "Trasformiamo Idee in Presenza Digitale",
       clients: [
-        { name: "Azul Kiteboarding", url: "https://www.azulkiteboarding.com/it/" },
-        { name: "Arena Negra Ristorante", url: "https://arena-negra-restaurant.com/it" },
-        { name: "La Niña Ristorante", url: "https://la-nina-ristorante.com/" },
-        { name: "La Cañita Cocktail Bar", url: "https://arena-negra-restaurant.com/it/la-canita" },
-        { name: "La Paella Ristorante", url: "https://la-paella-ristorante.com/" },
-        { name: "Tenerife Kite Foil", url: "https://tenerife-kite-foil.com/it" }
+        { name: "Azul Kiteboarding", url: "https://www.azulkiteboarding.com" },
+        { name: "Arena Negra Ristorante", url: "https://arena-negra-restaurant.com" },
+        { name: "La Niña Ristorante", url: "https://la-nina-restaurante.com" },
+        { name: "La Cañita Cocktail Bar", url: "https://arena-negra-restaurant.com/en/la-canita" },
+        { name: "La Paella Ristorante", url: "https://la-paella-restaurante.com" },
+        { name: "Tenerife Kite Foil", url: "https://tenerife-kite-foil.com" }
       ],
       terms: {
         title: 'Termini e Condizioni',

@@ -48,7 +48,7 @@ export const data= {
               firstWeekPrice: 120,
               subsequentWeeksPrice: 85,
               description: 'Gestión de Redes Sociales: Facebook, Instagram, Google My Business y Tripadvisor',
-              features: ['2-3 post semanales', 'Alcance 13.000 Personas', 'Clicks 25', 'Gestión de Reseñas', '* Servicion Informático sin coste adicional'],
+              features: ['2-3 post semanales', 'Alcance 1.300 Personas', 'Clicks 5', 'Gestión de Reseñas', '* Servicion Informático sin coste adicional'],
               checkbox:true
             },
             {
@@ -56,7 +56,7 @@ export const data= {
               firstWeekPrice: 150,
               subsequentWeeksPrice: 100,
               description: 'Gestión de Redes Sociales + Creación y Gestión de página Web',
-              features: ['2-3 post semanales', 'Alcance 13.000 Personas', 'Clicks 25', 'Gestión de Reseñas', 'Diseño y Gestión de página Web', '* Dominio Gratuito', 'Alojamiento Web Gratuito', '* Servicio Informático sin coste adicional'],
+              features: ['2-3 post semanales', 'Alcance 1.300 Personas', 'Clicks 5', 'Gestión de Reseñas', 'Diseño y Gestión de página Web', '* Dominio Gratuito', 'Alojamiento Web Gratuito', '* Servicio Informático sin coste adicional'],
               checkbox:true
             },
             {
@@ -130,7 +130,7 @@ export const data= {
               firstWeekPrice: 120,
               subsequentWeeksPrice: 85,
               description: 'Social Media Management: Facebook, Instagram, Google My Business and Tripadvisor',
-              features: ['2-3 posts per week', 'Reach 13,000 People', 'Clicks 25', 'Review Management', '* IT Service at no additional cost'],
+              features: ['2-3 posts per week', 'Reach 13,000 People', 'Clicks 5', 'Review Management', '* IT Service at no additional cost'],
               checkbox: true
             },
             {
@@ -138,7 +138,7 @@ export const data= {
               firstWeekPrice: 150,
               subsequentWeeksPrice: 100,
               description: 'Social Media Management + Website Creation and Management',
-              features: ['2-3 posts per week', 'Reach 13,000 People', 'Clicks 25', 'Review Management', 'Website Design and Management', '* Free Domain', 'Free Web Hosting', '* IT Service at no additional cost'],
+              features: ['2-3 posts per week', 'Reach 13,000 People', 'Clicks 5', 'Review Management', 'Website Design and Management', '* Free Domain', 'Free Web Hosting', '* IT Service at no additional cost'],
               checkbox: true
             },
             {
@@ -212,7 +212,7 @@ export const data= {
               firstWeekPrice: 120,
               subsequentWeeksPrice: 85,
               description: 'Gestione dei social media: Facebook, Instagram, Google My Business e Tripadvisor',
-              features: ['2-3 post a settimana', 'Raggiungi 13.000 persone', 'Click 25', 'Gestione delle recensioni', '* Servizio informatico senza costi aggiuntivi'],
+              features: ['2-3 post a settimana', 'Raggiungi 1.300 persone', 'Click 5', 'Gestione delle recensioni', '* Servizio informatico senza costi aggiuntivi'],
               checkbox: true
             },
             {
@@ -220,7 +220,7 @@ export const data= {
               firstWeekPrice: 150,
               subsequentWeeksPrice: 100,
               description: 'Gestione dei social media + Creazione e gestione del sito web',
-              features: ['2-3 post a settimana', 'Raggiungi 13.000 persone', 'Click 25', 'Gestione delle recensioni', 'Progettazione e gestione del sito web', '* Dominio gratuito', 'Hosting web gratuito', '* Servizio informatico senza costi aggiuntivi'],
+              features: ['2-3 post a settimana', 'Raggiungi 1.300 persone', 'Click 5', 'Gestione delle recensioni', 'Progettazione e gestione del sito web', '* Dominio gratuito', 'Hosting web gratuito', '* Servizio informatico senza costi aggiuntivi'],
               checkbox: true
             },
             {

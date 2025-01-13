@@ -53,27 +53,21 @@ const About = ({ idioma }) => {
 
    {/* Contenedor principal */}
     <div className="section__container">
-        <div className="section-header mb-24 text-primary">
+        <div className="section-header mb-24 text-primary text-xl">
           <h2
             className="uppercase font-medium flex items-center"
-            data-aos="fade-left"
-            data-aos-delay="0"
-            data-aos-duration="1500"
             id="about"
           >
             <Image className="mr-2" src={Four} alt="icon" priority />
             {subtitle}
           </h2>
           <h3
-            className="text-white text-xl capitalize"
-            data-aos="fade-up"
-            data-aos-delay="200"
-            data-aos-duration="1500"
+            className="text-white text-3xl capitalize"
           >
             {title}
           </h3>
           {/* Texto de párrafos */}
-          <div data-aos="fade-up" className="text-white mt-8">
+          <div className="text-white mt-8 text-xl">
             <p className="mb-4">{parraf1}</p>
             <p className="mb-4">{parraf2}</p>
             <p className="mb-4">{parraf3}</p>

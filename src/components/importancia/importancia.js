@@ -46,17 +46,17 @@ const EmpresaOnline = ({ idioma }) => {
 
       {/* Contenido principal */}
       <div className="section__container">
-        <div className="section-header text-primary mb-16">
-          <h2 className="uppercase font-medium flex items-center" data-aos="fade-left" data-aos-delay="0" data-aos-duration="1500">
+        <div className="section-header text-primary mb-16 text-xl">
+          <h2 className="uppercase font-medium flex items-center">
             <Image className="mr-2" src={Four} alt="icon" priority />
             {subtitle}
           </h2>
-          <h3 className="text-white capitalize text-xl" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1500">
+          <h3 className="text-white capitalize text-3xl">
             {title}
           </h3>
 
           {/* Texto de párrafos */}
-          <div data-aos="fade-up" className="text-white">
+          <div className="text-white text-xl">
             <p className="mb-4">{parraf1}</p>
             <p className="mb-4">{parraf2}</p>
             <p className="mb-4">{parraf3}</p>

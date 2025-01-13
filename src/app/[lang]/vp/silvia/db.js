@@ -1,21 +1,21 @@
-import img from '/public/vp/thiago/portada/portada.png';
+import img from '/public/vp/silvia/portada/silvia1.png';
 
 export const datos = {
   es: {
     portada: {
-      h1: " Cumpleaños de Thiago!",
+      h1: " Cumpleaños de Silvia!",
       h2: "Bienvenidos al",
       subtitulo: "Una fiesta inolvidable",
       img: img,
-      emojis1: '🎉🦖🎂🦕🎈🎉',
-      emojis2: '🎉🦖🎂🦕🎈🎉',
+      emojis1: '🎉👧🎂🎀🎈🎉',
+      emojis2: '🎉👧🎂🎀🎈🎉',
     },
     evento: {
       titulo: "¡Te estaremos esperando!",
-      diaEvento: "Día del Evento: 13 de Noviembre, 2024",
-      horaInicio: "Hora de Inicio: 16:15",
-      lugar: "Lugar: Biblioteca de Nebbiuno",
-      horaFin: "Hora de Finalización: 18:00",
+      diaEvento: "Día del Evento: 25 de Enero, 2025",
+      horaInicio: "Hora de Inicio: 14:30",
+      lugar: "Lugar: Green Village bar e palazzetto",
+      horaFin: "",
     },
     asistire:{
       titulo:'Asistiré',
@@ -43,19 +43,19 @@ export const datos = {
   },
   en: {
     portada: {
-      h1: "Thiago's Birthday!",
+      h1: "Silvia's Birthday!",
       h2: "Welcome",
       subtitulo: "",
       img: img,
-      emojis1: '🎉🦖🎂🦕🎈🎉',
-      emojis2: '🎉🦖🎂🦕🎈🎉',
+      emojis1: '🎉👧🎂🎀🎈🎉',
+      emojis2: '🎉👧🎂🎀🎈🎉',
     },
     evento: {
       titulo: "We'll be waiting for you!",
-      diaEvento: "Event Date: November 13, 2024",
-      horaInicio: "Start Time: 16:15",
-      lugar: "Location: Nebbiuno playground",
-      horaFin: "End Time: 18:00",
+      diaEvento: "Event Date: January 25, 2025",
+      horaInicio: "Start Time: 14:30",
+      lugar: "Location: Green Village bar e palazzetto",
+      horaFin: "",
     },
     asistire:{
       titulo:'"I Will Attend"',
@@ -83,19 +83,19 @@ export const datos = {
   },
   it: {
     portada: {
-      h1: "Compleanno di Thiago",
-      h2: "Benvenuti al ",
+      h1: "",
+      h2: " ",
       subtitulo: "",
       img: img,
-      emojis1: '🎉🦖🎂🦕🎈🎉',
-      emojis2: '🎉🦖🎂🦕🎈🎉',
+      emojis1: '🎉👧🎂🎀🎈🎉',
+      emojis2: '🎉👧🎂🎀🎈🎉',
     },
     evento: {
       titulo: "Ti aspettiamo!",
-      diaEvento: "Data dell'Evento: 13 Novembre 2024",
-      horaInicio: "Orario di Inizio: 16:15",
-      lugar: "Luogo: Biblioteca di Nebbiuno",
-      horaFin: "Orario di Fine: 18:00",
+      diaEvento: "Data dell'Evento: Sabato 25 Gennaio 2025",
+      horaInicio: "Orario di Inizio: 14:30",
+      lugar: "Luogo: Green Village bar e palazzetto",
+      horaFin: "",
     },
     asistire:{
       "titulo": "Parteciperò",
@@ -107,7 +107,7 @@ export const datos = {
     },
     traer: {
       titulo: "Non dimenticare di portare:",
-      lista: ["Tanta voglia di divertirti", "Tanta voglia di condividere",
+      lista: ["Guanti per pattinare", "Tanta voglia di divertirti", "Tanta voglia di condividere",
         "E il tuo splendido sorriso"],
     },
     recuerdos: {

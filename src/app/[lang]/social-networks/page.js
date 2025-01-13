@@ -3,11 +3,6 @@ import One from "/public/images/shape/offer-shadow-shape.png";
 import Two from "/public/images/shape/offer-bg-shape-left.png";
 import Three from "/public/images/shape/offer-bg-shape-right.png";
 import Four from "/public/images/icon/section-title.png";
-
-
-// Importamos iconos de React Icons
-
-import DeviceFrame from "@/components/deviseIfram/deviseIframe";
 import CmnBanner from "@/components/cmnBanner";
 import Navbar from "@/components/Navbar/Navbar";
 import ScrollProgressButton from "@/components/ScrollProgressButton";
@@ -79,16 +74,16 @@ const SocialNetworks = ({params}) => {
 
       {/* Contenedor principal */}
       <div className="section__container flex flex-col">
-        <div className="section-header text-primary mb-16">
-            <h2 className="uppercase font-medium flex items-center" data-aos="fade-left" data-aos-duration="1500">
+        <div className="section-header text-primary mb-16 text-xl">
+            <h2 className="uppercase font-medium flex items-center">
               <Image className="mr-2" src={Four} alt="icon" priority />
               {subtitle}
             </h2>
-            <h3 className="text-white capitalize text-xl" data-aos="fade-left" data-aos-delay="200" data-aos-duration="1500">
+            <h3 className="text-white capitalize text-6xl">
               {title}
             </h3>
             {parrafo.map((texto, index) => (
-              <p key={index} className="text-white mb-4" data-aos="fade-up" data-aos-delay={`${200 + index * 100}`} data-aos-duration="1500">
+              <p key={index} className="text-white mb-4">
                 {texto}
               </p>
             ))}

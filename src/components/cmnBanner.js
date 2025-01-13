@@ -42,7 +42,7 @@ const CmnBanner = ({ title }) => {
       {/* Contenido principal */}
       <div className="container mx-auto text-center">
         <h2
-          className="text-4xl font-semibold text-white"
+          className="text-6xl font-semibold text-white"
           data-aos="fade-up"
           data-aos-delay="0"
           data-aos-duration="1500"
@@ -50,11 +50,7 @@ const CmnBanner = ({ title }) => {
           {title}
         </h2>
         <div
-          className="mt-4 text-white flex justify-center items-center space-x-2"
-          data-aos="fade-up"
-          data-aos-delay="200"
-          data-aos-duration="1500"
-        >
+          className="mt-4 text-white flex justify-center items-center space-x-2">
           <Link href="/" className="hover:text-gray-300 transition">
             Home
           </Link>

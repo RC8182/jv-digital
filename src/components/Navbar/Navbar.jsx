@@ -105,7 +105,7 @@ const Navbar = ({ idioma }) => {
       <div className="px-3 w-full lg:hidden flex justify-between text-lightBlack lg:text-white bg-khaki h-[70px] items-center p-3">
         <div className="w-28">
           <Link href="/" aria-label="Link to ">
-            <img src={logo.src} className="block lg:hidden" alt="Royella_website_logo" />
+            <img src={logo.src} className="block lg:hidden" alt="JV-ditital_logo" />
           </Link>
         </div>
         <div className="flex items-center">
@@ -127,7 +127,7 @@ const Navbar = ({ idioma }) => {
             </Link>
             {link.subLinks.length > 0 && (
               <div className="absolute pt-5 lg:pt-8 z-20 hidden group-hover:block">
-                <ul className="shadow-2xl rounded-sm bg-[#1E3A8A80] text-white w-[200px] text-left transition-all duration-500 text-sm py-4">
+                <ul className="shadow-2xl rounded-sm bg-[#1E3A8A] text-white w-[200px] text-left transition-all duration-500 text-sm py-4">
                   {link.subLinks.map((subLink, subIndex) => (
                     <div key={subIndex} className="px-5 group hover:bg-khaki hover:text-metal">
                       <li className="hover:ml-3 duration-300">
