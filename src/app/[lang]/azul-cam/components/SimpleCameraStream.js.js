@@ -62,7 +62,8 @@ const SimpleCameraStream = () => {
   const handlePlay = () => {
     if (!videoRef.current) return;
     try {
-      videoRef.current.src = "https://azul-kite.ddns.net/api/webcam/index.m3u8";
+      videoRef.current.src = "https://azul-kite.ddns.net/dahua/index.m3u8";
+      //hls.loadSource("https://jv-digital.com/dahua/index.m3u8");
       videoRef.current.load(); // Carga explícita del stream
       videoRef.current.play().catch((err) => {
         console.error("Error al iniciar el vídeo:", err);

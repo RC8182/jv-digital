@@ -11,17 +11,17 @@ import Services from '@/components/Services';
 export const metadata = {
   es: {
     title: "JV-Digital: Tu Presencia Online",
-    description: "Innovación y eficiencia en Gestión Integral de Redes Sociales.",
+    description: "Innovación y eficiencia en Gestión Integral de Redes Sociales y Soluciones Informáticas.",
     icon: "https://jv-digital.com/icons/home/icon.png",
   },
   en: {
     title: "JV-Digital: Your Online Presence",
-    description: "Innovation and efficiency in Comprehensive Social Media Management.",
+    description: "Innovation and Efficiency in Comprehensive Management of Social Media and IT Solutions.",
     icon: "https://jv-digital.com/icons/home/icon.png",
   },
   it: {
     title: "JV-Digital: La Tua Presenza Online",
-    description: "Innovazione ed efficienza nella Gestione Integrale dei Social Media.",
+    description: "Innovazione ed Efficienza nella Gestione Integrale dei Social Media e Soluzioni Informatiche.",
     icon: "https://jv-digital.com/icons/home/icon.png",
   },
 };

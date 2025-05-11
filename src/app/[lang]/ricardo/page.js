@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import FullCameraStreamFull from "./components/WebRTCCameraStreamFull";
+import PTZControls from "../azul-cam/components/PTZJoystick";
+import FullCameraStream from "../azul-cam/components/WebRTCCameraStreamFull";
 
 export default function Page({ params }) {
   const [isClient, setIsClient] = useState(false);
@@ -17,7 +18,7 @@ export default function Page({ params }) {
 
   return (
     <main>
-      <FullCameraStreamFull params={params} />
+        <FullCameraStream params={params} />
     </main>
   );
 }

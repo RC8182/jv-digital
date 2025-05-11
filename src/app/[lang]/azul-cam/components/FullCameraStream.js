@@ -115,14 +115,16 @@ const FullCameraStream = ({ params }) => {
         maxMaxBufferLength: 3,
         backBufferLength: 1,
       });
-      hls.loadSource("https://azul-kite.ddns.net/api/webcam/index.m3u8");
+      hls.loadSource("https://azul-kite.ddns.net/dahua/index.m3u8");
+      //hls.loadSource("https://jv-digital.com/dahua/index.m3u8");
       hls.attachMedia(videoElement);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         videoElement.play();
       });
       hlsInstanceRef.current = hls;
     } else if (videoElement.canPlayType("application/vnd.apple.mpegurl")) {
-      videoElement.src = "https://azul-kite.ddns.net/api/webcam/index.m3u8";
+      videoElement.src = "https://azul-kite.ddns.net/dahua/index.m3u8";
+      //videoElement.src = "https://jv-digital.com/dahua/index.m3u8";
       videoElement.addEventListener("loadedmetadata", () => {
         videoElement.play();
       });
@@ -236,6 +238,7 @@ const FullCameraStream = ({ params }) => {
           color: #fff;
         }
       `}</style>
+      {/*<Anemometro/>*/}
     </div>
   );
 };

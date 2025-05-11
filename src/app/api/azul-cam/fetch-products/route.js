@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
+const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL;
 const CONSUMER_KEY = process.env.CONSUMER_KEY;
 const CONSUMER_SECRET = process.env.CONSUMER_SECRET;
 

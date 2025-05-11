@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 import crypto from 'crypto';
+import { setZoom } from '../state';
+
 
 const HOST = `http://${process.env.CAMERA_IP}:${process.env.CAMERA_PORT}`;
 const USER = process.env.USERNAMECAM;
 const PASS = process.env.PASSWORD;
 
-/* digest */
 async function dahua(url) {
   const r1 = await axios({ url, validateStatus: () => true });
   if (r1.status === 200) return r1;
@@ -24,24 +25,19 @@ async function dahua(url) {
   return axios({ url, headers:{ Authorization: auth } });
 }
 
-/* handler */
-export async function GET(req) {
-  const u   = new URL(req.url);
-  const qs  = u.searchParams;
-  let  cam;
+export async function GET(_req, { params }) {
+  const lvl = Number(params.level);
+  if (![1,2,3,4,5].includes(lvl))
+    return NextResponse.json({ success:false, error:'nivel' }, { status:400 });
 
-  if (qs.has('preset')) {
-    const p = qs.get('preset');
-    cam = `${HOST}/cgi-bin/ptz.cgi?action=start&channel=1&code=GotoPreset` +
-          `&arg1=0&arg2=${p}&arg3=0`;
-  } else {
-    cam = `${HOST}/cgi-bin/ptz.cgi${u.search}`;   // joystick / zoomTele / etc.
+  const pulses = 5 * (lvl - 1);                 // 0·5·10·15·20
+  const code   = pulses > 0 ? 'ZoomTele' : 'ZoomWide';
+  for (let i = 0; i < Math.abs(pulses); i++) {
+    const url = `${HOST}/cgi-bin/ptz.cgi?action=start&channel=1` +
+                `&code=${code}&arg1=0&arg2=0&arg3=0&arg4=1`;
+    await dahua(url);
+    await new Promise(r => setTimeout(r, 200));
   }
-
-  try {
-    const r = await dahua(cam);
-    return NextResponse.json({ success: r.status === 200 });
-  } catch (e) {
-    return NextResponse.json({ success:false, error:e.message }, { status:502 });
-  }
+  setZoom(lvl);
+  return NextResponse.json({ success:true, level:lvl });
 }

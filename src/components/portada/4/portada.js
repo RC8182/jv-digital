@@ -7,7 +7,7 @@ const Portada = ({ idioma }) => {
     es: {
       text: {
         title: "Lleva tu negocio al siguiente nivel",
-        description: "Expertos en Marketing Digital y Estrategias Empresariales",
+        description: "Expertos en Marketing Digital y Soluciones Informáticas",
         slogan: "Tu presencia Online, ",
         slogan1:"nuestra prioridad"
       },
@@ -15,7 +15,7 @@ const Portada = ({ idioma }) => {
     en: {
       text: {
         title: "Take Your Business to the Next Level",
-        description: "Experts in Digital Marketing and Business Strategies",
+        description: "Experts in Digital Marketing and IT Solutions",
         slogan: "Your online presence,",
         slogan1:"our priority"
       },
@@ -23,7 +23,7 @@ const Portada = ({ idioma }) => {
     it: {
       text: {
         title: "Porta la tua attività al livello successivo",
-        description: "Esperti in Marketing Digitale e Strategie Aziendali",
+        description: "Esperti in Marketing Digitale e Soluzioni Informatiche",
         slogan: "La tua presenza online,",
         slogan1:"la nostra priorità"
       },
@@ -33,11 +33,7 @@ const Portada = ({ idioma }) => {
   const { text } = contenido[idioma];
 
   return (
-    <section className="relative h-screen flex justify-center items-center "
-    style={{
-      backgroundImage: "linear-gradient(to bottom, navy, black, navy)",
-      overflow: "hidden"
-    }}>
+    <section className="relative h-screen flex justify-center items-center bg-gradient-to-b from-[#1C2E5D] via-[#000000] to-gray-900 text-[#f2f2f2] overflow-hidden">
       {/* Rotating Pentagon Circles */}
       <div className="absolute bottom-[-10%] left-[-10%]  w-96 h-96 animate-spin-slow origin-center">
         <Image src={Five} alt="Pentágono Uno" priority />
