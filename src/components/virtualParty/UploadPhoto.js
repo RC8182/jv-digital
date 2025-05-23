@@ -26,7 +26,7 @@ const translations = {
   },
 };
 
-function UploadPhoto({ onUpload, idioma, nombreDeLaPagina, bgboton }) {
+function UploadPhoto({ onUpload, idioma, nombreDeLaPagina, bgboton, color }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(false); // Estado para el spinner
@@ -82,7 +82,7 @@ function UploadPhoto({ onUpload, idioma, nombreDeLaPagina, bgboton }) {
           />
         </div>
       )}
-      <label className={`${bgboton} text-white px-4 py-2 rounded cursor-pointer flex items-center space-x-2 xxs:px-2 xxs:py-1 xxs:space-x-1`}>
+      <label className={`${bgboton} ${color} px-4 py-2 rounded cursor-pointer flex items-center space-x-2 xxs:px-2 xxs:py-1 xxs:space-x-1`}>
         <FaCamera />
         <span className="xxs:text-xxs">{translations[idioma].takePhoto}</span>
         <input

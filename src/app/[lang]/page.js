@@ -34,7 +34,9 @@ export default function Home({ params }) {
     <html lang={idioma}>
       <head>
         <title>{title}</title>
-        <meta name="description" content={description} />
+        <meta name="description" 
+        content={description} />
+        <meta name="google-site-verification" content="6Wleb1gKWBvvhDhTruIXhwFweF4P7KhhoVpZ-UM1-y4" />
         {/* Etiquetas Open Graph para WhatsApp */}
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />

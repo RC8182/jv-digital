@@ -2,6 +2,9 @@
   "name": "jv-digital",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,13 +13,17 @@
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.5.4",
+    "@prisma/client": "^6.7.0",
     "aos": "^2.3.4",
     "apexcharts": "^4.7.0",
     "autoprefixer": "^10.4.19",
     "axios": "^1.9.0",
+    "bcryptjs": "^3.0.2",
     "bootstrap": "^5.3.3",
     "fslightbox-react": "^1.7.6",
     "hls.js": "^1.5.17",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "leaflet": "^1.9.4",
     "leaflet-velocity": "^2.1.4",
     "leaflet.heat": "^0.2.0",
@@ -24,6 +31,8 @@
     "negotiator": "^0.6.3",
     "netcdfjs": "^3.0.0",
     "next": "14.2.3",
+    "next-auth": "^4.24.11",
+    "prisma": "^6.7.0",
     "react": "^18",
     "react-apexcharts": "^1.7.0",
     "react-dom": "^18",

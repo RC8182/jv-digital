@@ -9,6 +9,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
+      # Para persistir los uploads
       - ./public/uploads:/app/public/uploads
-
-
+      # Para persistir y mover la base de datos dev.db
+      - ./dev.db:/app/dev.db

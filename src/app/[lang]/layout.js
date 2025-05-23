@@ -2,6 +2,7 @@ import React from 'react';
 import { Inter, Dancing_Script, Roboto_Mono } from 'next/font/google';
 import './globals.css';
 import InitAnimations from '@/components/InitAnimations';
+import SessionProviderWrapper from '@/components/SessionProviderWrapper';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,7 +28,10 @@ export default function RootLayout({ children }) {
     <html lang="es">
       <body className={`${inter.variable} ${roboto_mono.variable} ${dancingScript.variable}`}>
         <InitAnimations />
-        {children}
+        <SessionProviderWrapper>
+         {children}
+        </SessionProviderWrapper>
+        
       </body>
     </html>
   );

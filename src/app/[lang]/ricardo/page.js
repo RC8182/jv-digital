@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PTZControls from "../azul-cam/components/PTZJoystick";
 import FullCameraStream from "../azul-cam/components/WebRTCCameraStreamFull";
 
 export default function Page({ params }) {

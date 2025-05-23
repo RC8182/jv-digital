@@ -6,7 +6,7 @@ import { fetchProducts } from "../utils/azul-fetch";
 import Marquee from "./marquee";
 import PTZControls from "./PTZJoystick";
 
-const FullCameraStream = ({ params }) => {
+const FullCameraStreamFull = ({ params }) => {
   const idioma        = params.lang || "es";
   const playakite     = idioma === "es" ? "Playa Kite" : "Kite Beach";
   const bilenkoTxt    = idioma === "es" ? "Tecnología ofrecida por" : "Technology offered by";
@@ -168,4 +168,4 @@ const FullCameraStream = ({ params }) => {
   );
 };
 
-export default FullCameraStream;
+export default FullCameraStreamFull;

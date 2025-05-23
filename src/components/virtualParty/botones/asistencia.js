@@ -16,7 +16,7 @@ export const Asistencia = ({ telefono, titulo, mensaje, bgcolor, color, asistenc
         href={url}
         passHref
       >
-        <span>{titulo}</span>
+        <span className={`${color}`}>{titulo}</span>
       </Link>
     </button>
   );

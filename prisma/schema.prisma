@@ -1,0 +1,69 @@
+// prisma/schema.prisma
+
+// 1) Fuente de datos (ajusta provider y DATABASE_URL a tu caso)
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// 2) Cliente de Prisma
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+// 3) Aquí tus modelos
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+}
+
+model Client {
+  id       Int       @id @default(autoincrement())
+  name     String
+  address  String?
+  phone    String?
+  email    String?
+  vat      String?
+  city     String?
+  products Product[] // ← campo inverso para la relación
+  invoices Invoice[]
+}
+
+model Product {
+  id       Int     @id @default(autoincrement())
+  client   Client  @relation(fields: [clientId], references: [id])
+  clientId Int
+  code     String?
+  name     String
+  price    Float
+}
+
+model Invoice {
+  id          Int           @id @default(autoincrement())
+  client      Client        @relation(fields: [clientId], references: [id])
+  clientId    Int
+  number      String
+  date        DateTime
+  includeIGIC Boolean
+  includeIRPF Boolean
+  subtotal    Float
+  igic        Float
+  irpf        Float
+  total       Float
+  lines       InvoiceLine[]
+  createdAt   DateTime      @default(now())
+}
+
+model InvoiceLine {
+  id          Int     @id @default(autoincrement())
+  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId   Int
+  code        String?
+  description String
+  quantity    Int
+  unitPrice   Float
+  discount    Float
+}
