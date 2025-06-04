@@ -3,7 +3,7 @@
 
 import { google } from 'googleapis';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../../../auth/[...nextauth]/route'; // Ajusta la ruta
+import { authOptions } from '../../../auth/[...nextauth]/route'; // Ajusta la ruta
 import { NextResponse } from 'next/server';
 
 export async function GET(req) {

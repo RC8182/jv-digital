@@ -6,7 +6,7 @@ import ChatBox from './agente/components/ChatBox';
 import EmailBox from './agente/components/EmailBox';
 import PdfManager from './agente/components/PdfManager';
 import TaskBox from './agente/components/TaskBox';
-import CollapsiblePanel from './components/CollapsiblePanel';
+import CollapsiblePanel from './CollapsiblePanel';
 
 
 

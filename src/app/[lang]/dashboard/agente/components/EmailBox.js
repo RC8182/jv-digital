@@ -1,4 +1,4 @@
-// src/app/[lang]/agente/components/EmailBox.js
+// src/app/[lang]/dashboard/agente/components/EmailBox.js
 'use client';
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
@@ -54,7 +54,7 @@ export default function EmailBox() {
       if (pageTokenToUse) params.append('pageToken', pageTokenToUse);
       params.append('maxResults', '10'); // Número de correos por página
 
-      const url = `/api/dashboard/agente/gmail/list?${params.toString()}`;
+      const url = `/api/agente/gmail/list?${params.toString()}`;
       
       const res = await fetch(url, {
         method: 'GET',

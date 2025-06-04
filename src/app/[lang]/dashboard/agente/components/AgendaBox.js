@@ -11,7 +11,7 @@ export default function AgendaBox() {
     setLoading(true);
     const today = new Date().toISOString().slice(0, 10);            // YYYY-MM-DD
     const seven = new Date(Date.now() + 7*864e5).toISOString().slice(0, 10);
-    const res   = await fetch(`/api/dashboard/agente/agenda?from=${today}&to=${seven}`);
+    const res   = await fetch(`/api/agente/agenda?from=${today}&to=${seven}`);
     const { events = [] } = await res.json();
     setEvents([...new Map(events.map(e => [e.id, e])).values()]);   // sin duplicados
     setLoading(false);

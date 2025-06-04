@@ -1,4 +1,4 @@
-// app/[lang]/agente/components/PdfManager.js
+// app/[lang]/dashboard/agente/components/PdfManager.js
 'use client';
 import { useState, useEffect } from 'react';
 
@@ -12,7 +12,7 @@ export default function PdfManager() {
   /* ─── cargar lista ─── */
   const fetchPDFList = async () => {
     try {
-      const res = await fetch('/api/dashboard/agente/pdf');
+      const res = await fetch('/api/agente/rag-pdf');
       if (!res.ok) throw new Error(`Status ${res.status}`);
       const { pdfs } = await res.json();
       setPdfList(pdfs);
@@ -47,7 +47,7 @@ export default function PdfManager() {
     formData.append('file', selectedFile);
 
     try {
-      const res = await fetch('/api/dashboard/agente/pdf', { method: 'POST', body: formData });
+      const res = await fetch('/api/agente/rag-pdf', { method: 'POST', body: formData });
       if (!res.ok) throw new Error(`Status ${res.status}`);
       setMessage('PDF subido y procesado correctamente.');
       setSelectedFile(null);
@@ -63,7 +63,7 @@ export default function PdfManager() {
   /* ─── eliminar PDF ─── */
   const handleDelete = async docId => {
     try {
-      const res = await fetch(`/api/dashboard/agente/pdf?doc_id=${docId}`, { method: 'DELETE' });
+      const res = await fetch(`/api/agente/rag-pdf?doc_id=${docId}`, { method: 'DELETE' });
       if (!res.ok) throw new Error(`Status ${res.status}`);
       const { message: msg } = await res.json();
       setMessage(msg);

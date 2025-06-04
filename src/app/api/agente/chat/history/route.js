@@ -1,7 +1,7 @@
 // src/app/api/dashboard/agente/chat/history/route.js
 import { NextResponse } from 'next/server';
 // Importa las funciones de memoria que ahora aceptan prismaClient
-import { getAllMessages, deleteMessageById, clearSessionMemory } from '@/app/api/dashboard/agente/utils/memory';
+import { getAllMessages, deleteMessageById, clearSessionMemory } from '@/app/api/agente/utils/memory';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/prisma'; // <-- IMPORTA LA INSTANCIA SINGLETON AQUI

@@ -26,7 +26,7 @@ export default function ClientsPage({ params }) {
   // Carga lista de clientes
   const loadClients = async () => {
     try {
-      const res = await fetch("/api/dashboard/clients")
+      const res = await fetch("/api/clients")
       if (!res.ok) {
         console.error("Error en la respuesta de la API de clientes:", res.status, res.statusText);
         throw new Error(res.statusText);
@@ -56,8 +56,8 @@ export default function ClientsPage({ params }) {
 
     const method = form.id ? "PUT" : "POST";
     const url = form.id
-      ? `/api/dashboard/clients/${form.id}`
-      : "/api/dashboard/clients";
+      ? `/api/clients/${form.id}`
+      : "/api/clients";
 
     try {
       // 1) Guardar/Actualizar Cliente
@@ -84,12 +84,12 @@ export default function ClientsPage({ params }) {
 
       // Eliminar productos
       await Promise.all(productsToDelete.map(prod => 
-        fetch(`/api/dashboard/products/${prod.id}`, { method: "DELETE" })
+        fetch(`/api/products/${prod.id}`, { method: "DELETE" })
       ));
 
       // Crear nuevos productos
       await Promise.all(productsToCreate.map(prod =>
-        fetch("/api/dashboard/products", {
+        fetch("/api/products", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -109,7 +109,7 @@ export default function ClientsPage({ params }) {
             original.code !== prod.code || 
             original.name !== prod.name || 
             original.price !== parseFloat(prod.price)) { // Compara precios como números
-          return fetch(`/api/dashboard/products/${prod.id}`, {
+          return fetch(`/api/products/${prod.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -147,7 +147,7 @@ export default function ClientsPage({ params }) {
     });
 
     try {
-      const res = await fetch(`/api/dashboard/clients/${c.id}/products`);
+      const res = await fetch(`/api/clients/${c.id}/products`);
       if (!res.ok) throw new Error(res.statusText);
       const list = await res.json();
       const formattedProducts = list.map(p => ({
@@ -169,7 +169,7 @@ export default function ClientsPage({ params }) {
   const deleteClient = async id => {
     if (!confirm("¿Eliminar este cliente? Esta acción también eliminará todos sus productos y facturas asociadas.")) return;
     try {
-      const res = await fetch(`/api/dashboard/clients/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/clients/${id}`, { method: "DELETE" });
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.error || res.statusText);

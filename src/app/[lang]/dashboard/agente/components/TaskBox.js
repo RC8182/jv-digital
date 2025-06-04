@@ -1,4 +1,4 @@
-// src/app/[lang]/agente/components/TaskBox.js
+// src/app/[lang]/dashboard/agente/components/TaskBox.js
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
@@ -47,7 +47,7 @@ export default function TaskBox() {
     setLoading(true);
     setMessage('');
     try {
-      const res = await fetch('/api/dashboard/agente/agenda', {
+      const res = await fetch('/api/agente/agenda', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'list_tasks', userId: userId })
@@ -114,7 +114,7 @@ export default function TaskBox() {
     };
 
     try {
-      const res = await fetch('/api/dashboard/agente/agenda', {
+      const res = await fetch('/api/agente/agenda', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -169,7 +169,7 @@ export default function TaskBox() {
     }
 
     try {
-      const res = await fetch('/api/dashboard/agente/agenda', {
+      const res = await fetch('/api/agente/agenda', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -201,7 +201,7 @@ export default function TaskBox() {
     setMessage('');
     setLoading(true);
     try {
-      const res = await fetch('/api/dashboard/agente/agenda', {
+      const res = await fetch('/api/agente/agenda', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'delete_task', userId: userId, taskId: id })

@@ -1,4 +1,4 @@
-// src/app/[lang]/dashboard/invoices/page.js
+// src/app/[lang]/agente/invoices/page.js
 "use client"
 
 import { useState, useEffect } from "react"
@@ -31,7 +31,7 @@ export default function InvoicePage({ params }) {
 
   // Pedir próximo número global al montar
   useEffect(() => {
-    fetch("/api/dashboard/invoices/next-number")
+    fetch("/api/agente/invoices/next-number")
       .then(res => res.ok ? res.json() : Promise.reject(res.status))
       .then(({ nextNumber }) =>
         setInvoiceMeta(prev => ({ ...prev, number: nextNumber }))
@@ -42,7 +42,7 @@ export default function InvoicePage({ params }) {
   // Cargar lista de clientes
   useEffect(() => {
     if (status === "authenticated") {
-      fetch("/api/dashboard/clients")
+      fetch("/api/clients")
         .then(r => r.json())
         .then(setClients)
         .catch(console.error)
@@ -119,7 +119,7 @@ export default function InvoicePage({ params }) {
 
   // Cargar facturas de un cliente
   const loadInvoices = id =>
-    fetch(`/api/dashboard/clients/${id}/invoices`)
+    fetch(`/api/clients/${id}/invoices`)
       .then(r => r.json())
       .then(setInvoices)
       .catch(console.error)
@@ -137,7 +137,7 @@ export default function InvoicePage({ params }) {
     const sel = clients.find(c => c.id === id)
     setClient(sel)
     try {
-      const prods = await fetch(`/api/dashboard/clients/${id}/products`)
+      const prods = await fetch(`/api/clients/${id}/products`)
         .then(r => r.ok ? r.json() : [])
       setClientProducts(prods)
     } catch {
@@ -150,7 +150,7 @@ export default function InvoicePage({ params }) {
 
   // Editar factura existente
   const editInvoice = async id => {
-    const res = await fetch(`/api/dashboard/invoices/${id}`)
+    const res = await fetch(`/api/agente/invoices/${id}`)
     if (!res.ok) {
       console.error("Error al cargar factura para edición:", await res.text());
       return;
@@ -176,7 +176,7 @@ export default function InvoicePage({ params }) {
   // Eliminar factura
   const deleteInvoice = async id => {
     if (!confirm("¿Eliminar esta factura?")) return
-    const res = await fetch(`/api/dashboard/invoices/${id}`, { method: "DELETE" })
+    const res = await fetch(`/api/agente/invoices/${id}`, { method: "DELETE" })
     if (res.ok) {
       if (client) loadInvoices(client.id); // Recargar si hay cliente seleccionado
     } else {
@@ -238,8 +238,8 @@ export default function InvoicePage({ params }) {
     }
     const method = editingInvoiceId ? "PUT" : "POST"
     const url = editingInvoiceId
-      ? `/api/dashboard/invoices/${editingInvoiceId}`
-      : "/api/dashboard/invoices"
+      ? `/api/dashboar/agente/invoices/${editingInvoiceId}`
+      : "/api/agente/invoices"
     try {
       const res = await fetch(url, {
         method,
@@ -254,7 +254,7 @@ export default function InvoicePage({ params }) {
       loadInvoices(client.id)
       // limpiar formulario y pedir siguiente número
       setItems([{ code: "", description: "", quantity: 1, unitPrice: "0", discount: "0" }]); // Reset a STRINGS
-      fetch("/api/dashboard/invoices/next-number")
+      fetch("/api/agente/invoices/next-number")
         .then(r => r.ok ? r.json() : Promise.reject(r.status))
         .then(({ nextNumber }) =>
           setInvoiceMeta(prev => ({ ...prev, number: nextNumber }))
@@ -304,7 +304,7 @@ export default function InvoicePage({ params }) {
               ))}
             </select>
             <button
-              onClick={() => router.push(`/${lang}/dashboard/clients`)}
+              onClick={() => router.push(`/${lang}/clients`)}
               className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 rounded-md font-semibold text-sm shadow-md transition-colors"
               title="Añadir Cliente"
             >

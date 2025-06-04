@@ -4,7 +4,7 @@
 import { useSession, SessionProvider, signOut } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import DashboardSidebar from './components/DashboardSidebar';
+import DashboardSidebar from './DashboardSidebar';
 
 function DashboardLayoutContent({ children }) {
   const { data: session, status } = useSession();

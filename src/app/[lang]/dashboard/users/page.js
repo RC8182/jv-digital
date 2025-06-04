@@ -14,7 +14,7 @@ export default function UsersPage() {
   // Leer lista de usuarios
   const loadUsers = async () => {
     try {
-      const res = await fetch('/api/dashboard/users')
+      const res = await fetch('/api/users')
       if (!res.ok) {
         console.error("Error en la respuesta de la API de usuarios:", res.status, res.statusText);
         throw new Error(res.statusText);
@@ -42,7 +42,7 @@ export default function UsersPage() {
     if (form.password) payload.password = form.password // Solo añade el password si se ha introducido
     
     const method = form.id ? 'PUT' : 'POST'
-    const url = form.id ? `/api/dashboard/users/${form.id}` : '/api/dashboard/users'
+    const url = form.id ? `/api/users/${form.id}` : '/api/users'
     
     try {
       const res = await fetch(url, {
@@ -72,7 +72,7 @@ export default function UsersPage() {
   const deleteUser = async id => {
     if (!confirm('¿Eliminar este usuario? Esta acción es irreversible y podría afectar otros datos (ej. tareas asignadas)?')) return
     try {
-      const res = await fetch(`/api/dashboard/users/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/users/${id}`, { method: 'DELETE' })
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.error || res.statusText);

@@ -63,7 +63,7 @@ export default function ChatBox() {
     const loadInitialMessages = async () => {
       if (idToUse) {
         try {
-          const res = await fetch(`/api/dashboard/agente/chat/history?sessionId=${idToUse}`);
+          const res = await fetch(`/api/agente/chat/history?sessionId=${idToUse}`);
           if (res.ok) {
             const data = await res.json();
             // Mostrar solo los últimos 10 mensajes o un número razonable por defecto
@@ -133,7 +133,7 @@ export default function ChatBox() {
 
         try {
           // Llama a la nueva ruta STT
-          const response = await fetch('/api/dashboard/agente/audio/stt', { 
+          const response = await fetch('/api/agente/audio/stt', { 
             method: 'POST',
             body: formData,
           });
@@ -195,7 +195,7 @@ export default function ChatBox() {
     try {
       // 1. Guardar el mensaje del usuario en la BD
       // Usamos una llamada directa aquí para evitar dependencia circular con saveMessage en la ruta de chat
-      const savedUserMessageRes = await fetch('/api/dashboard/agente/chat/save-message', { // Tendremos que crear esta ruta!
+      const savedUserMessageRes = await fetch('/api/agente/chat/save-message', { // Tendremos que crear esta ruta!
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId: sessionId, role: 'user', content: messageToSend })
@@ -207,7 +207,7 @@ export default function ChatBox() {
       ));
 
       // 2. Enviar el mensaje al agente principal (SIEMPRE como TEXTO)
-      const agentRes = await fetch('/api/dashboard/agente/chat', {
+      const agentRes = await fetch('/api/agente/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -236,7 +236,7 @@ export default function ChatBox() {
         // Si la última entrada fue de voz, generar respuesta de voz (TTS)
         setVoiceProcessing(true); // Activar carga para TTS
         try {
-          const ttsRes = await fetch('/api/dashboard/agente/audio/tts', { 
+          const ttsRes = await fetch('/api/agente/audio/tts', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: agentResponseText }),
@@ -297,7 +297,7 @@ export default function ChatBox() {
     if (!sessionId) return;
     setHistoryLoading(true);
     try {
-      const res = await fetch(`/api/dashboard/agente/chat/history?sessionId=${sessionId}`);
+      const res = await fetch(`/api/agente/chat/history?sessionId=${sessionId}`);
       if (res.ok) {
         const data = await res.json();
         setMessages(data.messages); // Cargar TODO el historial
@@ -319,7 +319,7 @@ export default function ChatBox() {
     }
     setTextLoading(true); // Usamos textLoading para indicar que se está borrando
     try {
-      const res = await fetch('/api/dashboard/agente/chat/history', {
+      const res = await fetch('/api/agente/chat/history', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId: sessionId }),
@@ -345,7 +345,7 @@ export default function ChatBox() {
     }
     setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId)); // Eliminación optimista en el frontend
     try {
-      const res = await fetch('/api/dashboard/agente/chat/history', {
+      const res = await fetch('/api/agente/chat/history', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messageId: messageId }),

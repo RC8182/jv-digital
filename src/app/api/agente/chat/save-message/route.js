@@ -1,6 +1,6 @@
 // src/app/api/agente/chat/save-message/route.js
 import { NextResponse } from 'next/server';
-import { saveMessage } from '@/app/api/dashboard/agente/utils/memory';
+import { saveMessage } from '@/app/api/agente/utils/memory';
 import prisma from '@/lib/prisma'; // <-- IMPORTA LA INSTANCIA SINGLETON AQUI
 
 export const runtime = 'nodejs';

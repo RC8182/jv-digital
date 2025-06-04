@@ -5,17 +5,17 @@ import {
   updateEvent as _updateCalendarEvent,
   deleteEvent as _deleteCalendarEvent,
   moveAllEventsToDate as _moveAllCalendarEventsToDate
-} from '@/app/api/dashboard/agente/utils/googleCalendar.js';
+} from '@/app/api/agente/utils/googleCalendar.js';
 
 import {
   getGmailMessageContent as _getGmailMessageContent,
   listGmailMessages as _listGmailMessages,
   downloadGmailAttachment as _downloadGmailAttachment // Importa la nueva función
-} from '@/app/api/dashboard/agente/utils/googleGmail.js';
+} from '@/app/api/agente/utils/googleGmail.js';
 
 import {
   uploadPdfToQdrant as _uploadPdfToQdrant // Importa la nueva función
-} from '@/app/api/dashboard/agente/utils/qdrant.js';
+} from '@/app/api/agente/utils/qdrant.js';
 
 export const functions = [
   // --- Funciones de Google Calendar (existentes) ---

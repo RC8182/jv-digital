@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getGmailMessageContent } from '../../utils/googleGmail.js';
-import { process_pdf_attachment_to_qdrant } from '@/app/api/dashboard/agente/chat/events.js';
+import { process_pdf_attachment_to_qdrant } from '@/app/api/agente/chat/events.js';
 
 export const runtime = 'nodejs';
 

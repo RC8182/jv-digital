@@ -1,4 +1,4 @@
-// src/app/api/agente/audio/stt/route.js
+// src/app/api/dashboard/agente/audio/stt/route.js
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
@@ -15,10 +15,17 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Falta el archivo de audio para STT.' }, { status: 400 });
     }
 
-    // Convertir Blob a un objeto File para la API de OpenAI Whisper
-    const audioFile = new File([audioBlob], 'audio.webm', { type: audioBlob.type });
+    // Convertir el Blob a un ArrayBuffer primero, y luego a un Buffer de Node.js
+    // Esto asegura que el archivo se maneje como datos binarios planos en el entorno de Node.js
+    const audioArrayBuffer = await audioBlob.arrayBuffer();
+    const audioBuffer = Buffer.from(audioArrayBuffer); // <-- CAMBIO CLAVE AQUI
+
+    // Crear un objeto File compatible para OpenAI Whisper desde el Buffer
+    // El 'name' y 'type' son importantes para que OpenAI lo reconozca
+    const audioFile = new File([audioBuffer], 'audio.webm', { type: audioBlob.type }); // <-- Usamos audioBuffer aquí
 
     console.log('STT Route: Iniciando transcripción con OpenAI Whisper...');
+    console.log(`STT Route: Archivo de audio recibido. Tamaño: ${audioBuffer.length} bytes, Tipo: ${audioBlob.type}`); // Log para depurar
     const transcription = await openai.audio.transcriptions.create({
       file: audioFile,
       model: 'whisper-1',
@@ -30,6 +37,7 @@ export async function POST(req) {
 
   } catch (error) {
     console.error('Error en la ruta STT:', error.message, error.stack);
+    // Incluir más detalles en el error para el frontend si es posible
     return NextResponse.json({ error: 'Error interno del servidor en la ruta STT.', details: error.message }, { status: 500 });
   }
 }

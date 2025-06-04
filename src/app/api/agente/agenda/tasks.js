@@ -2,7 +2,7 @@
 
 import { PrismaClient } from '@prisma/client';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../../auth/[...nextauth]/route.js';
+import { authOptions } from '../../auth/[...nextauth]/route.js';
 import { listEvents as _listEvents } from '../utils/googleCalendar.js';
 
 const prisma = new PrismaClient();

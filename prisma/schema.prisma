@@ -26,10 +26,12 @@ model User {
 
   accounts Account[]
   sessions Session[]
-  tasks    Task[] // <-- Las tareas también se eliminarán si el usuario se borra
+  tasks    Task[]
+  expenses Expense[]   
 
   @@schema("auth")
 }
+
 
 model Account {
   id                 String  @id @default(cuid())
@@ -176,3 +178,21 @@ model InvoiceLine {
 
   @@schema("auth")
 }
+
+model Expense {
+  id            Int      @id @default(autoincrement())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  supplier      String?
+  date          DateTime @default(now())
+  baseAmount    Float?
+  taxAmount     Float?
+  totalAmount   Float?
+  filename      String
+  docId         String
+  createdAt     DateTime @default(now())
+
+  @@schema("auth")
+}
+
+
