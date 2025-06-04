@@ -44,7 +44,7 @@ export async function middleware(request) {
   }
 
   // 2) Protección de la sección privada
-  if (pathname.includes('/private')) {
+  if (pathname.includes('/dashboard')) {
     const token = await getToken({ req: request, secret: NEXTAUTH_SECRET })
     if (!token) {
       const locale = getLocale(request)

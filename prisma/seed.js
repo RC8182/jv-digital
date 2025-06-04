@@ -1,10 +1,17 @@
-// prisma/seed.js
-const { PrismaClient } = require("@prisma/client")
-const bcrypt = require("bcrypt")
+const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcrypt");
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL + "?search_path=auth",
+    },
+  },
+});
+
 async function main() {
-  const hashed = await bcrypt.hash("111111", 10)
+  const hashed = await bcrypt.hash("111111", 10);
+
   await prisma.user.upsert({
     where: { email: "admin@ejemplo.com" },
     update: {},
@@ -13,12 +20,14 @@ async function main() {
       email: "admin@ejemplo.com",
       password: hashed,
     },
-  })
+  });
+
+  console.log("✅ Usuario 'admin@ejemplo.com' creado con contraseña '111111'");
 }
 
 main()
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
+  .catch((e) => {
+    console.error("❌ Error al ejecutar seed:", e);
+    process.exit(1);
   })
-  .finally(() => prisma.$disconnect())
+  .finally(() => prisma.$disconnect());

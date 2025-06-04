@@ -1,24 +1,125 @@
 // prisma/schema.prisma
 
-// 1) Fuente de datos (ajusta provider y DATABASE_URL a tu caso)
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["auth", "memory"]
 }
 
-// 2) Cliente de Prisma
 generator client {
-  provider = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
 }
 
-// 3) Aquí tus modelos
+/////////////////////////
+// Esquema “auth” - Modelos de NextAuth.js y tus modelos asociados
+/////////////////////////
+
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+
+  accounts Account[]
+  sessions Session[]
+  tasks    Task[] // <-- Las tareas también se eliminarán si el usuario se borra
+
+  @@schema("auth")
 }
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
+  refresh_token_expires_in Int?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade) // Ya tenía onDelete: Cascade
+
+  @@unique([provider, providerAccountId])
+  @@schema("auth")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade) // Ya tenía onDelete: Cascade
+
+  @@schema("auth")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@schema("auth")
+}
+
+model Task {
+  id             Int       @id @default(autoincrement())
+  title          String
+  description    String?
+  dueDate        DateTime?
+  estimatedHours Float?
+  priority       String    // 'low' | 'med' | 'high'
+  status         String    // 'todo' | 'in_progress' | 'done'
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Campos de contexto
+  category          String?
+  project           String?
+  clientName        String?
+  recurrent         String?
+  requiredTools     String[] // No opcional aquí, solo puede ser una lista vacía si no hay herramientas
+  relatedDocumentIds String[] // No opcional aquí, solo puede ser una lista vacía si no hay documentos
+
+  // NUEVOS CAMPOS DE PROGRESO
+  progress          Int?     @default(0) // Progreso en porcentaje (0-100)
+  actualHours       Float?   @default(0) // Horas reales invertidas
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade) // <-- ¡AÑADIDO onDelete: Cascade!
+
+  @@schema("auth")
+}
+
+/////////////////////////
+// Esquema “memory”
+/////////////////////////
+
+model MemoryEntry {
+  id        Int      @id @default(autoincrement())
+  sessionId String
+  role      String
+  content   String
+  createdAt DateTime @default(now())
+
+  @@schema("memory")
+}
+
+/////////////////////////
+// Otros modelos - En tu esquema 'auth'
+/////////////////////////
 
 model Client {
   id       Int       @id @default(autoincrement())
@@ -26,24 +127,28 @@ model Client {
   address  String?
   phone    String?
   email    String?
-  vat      String?
+  nif      String?
   city     String?
-  products Product[] // ← campo inverso para la relación
+  products Product[]
   invoices Invoice[]
+
+  @@schema("auth")
 }
 
 model Product {
   id       Int     @id @default(autoincrement())
-  client   Client  @relation(fields: [clientId], references: [id])
+  client   Client  @relation(fields: [clientId], references: [id], onDelete: Cascade) // <-- ¡AÑADIDO onDelete: Cascade!
   clientId Int
   code     String?
   name     String
   price    Float
+
+  @@schema("auth")
 }
 
 model Invoice {
   id          Int           @id @default(autoincrement())
-  client      Client        @relation(fields: [clientId], references: [id])
+  client      Client        @relation(fields: [clientId], references: [id], onDelete: Cascade) // <-- ¡AÑADIDO onDelete: Cascade!
   clientId    Int
   number      String
   date        DateTime
@@ -55,15 +160,19 @@ model Invoice {
   total       Float
   lines       InvoiceLine[]
   createdAt   DateTime      @default(now())
+
+  @@schema("auth")
 }
 
 model InvoiceLine {
   id          Int     @id @default(autoincrement())
-  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade) // <-- ¡AÑADIDO onDelete: Cascade!
   invoiceId   Int
   code        String?
   description String
   quantity    Int
   unitPrice   Float
   discount    Float
+
+  @@schema("auth")
 }
