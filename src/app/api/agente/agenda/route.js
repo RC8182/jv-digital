@@ -1,4 +1,4 @@
-// src/app/api/dashboard/agente/agenda/route.js
+// src/app/api/agente/agenda/route.js
 
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
@@ -64,7 +64,7 @@ export async function GET(req) {
     }));
     return NextResponse.json({ events });
   } catch (err) {
-    console.error('GET /api/dashboard/agente/agenda error:', err);
+    console.error('GET /api/agente/agenda error:', err);
     return NextResponse.json({ events: [], error: err.message }, { status: 500 });
   }
 }
@@ -76,7 +76,7 @@ export async function POST(req) {
     const created = await createEvent(accessToken, refreshToken, body);
     return NextResponse.json({ created });
   } catch (err) {
-    console.error('POST /api/dashboard/agente/agenda Error:', err.message);
+    console.error('POST /api/agente/agenda Error:', err.message);
     const status = err.message.includes('No authenticated Google session') ? 401 : 500;
     return NextResponse.json({ error: 'internal', details: err.message }, { status });
   }
@@ -94,7 +94,7 @@ export async function PATCH(req) {
       );
       return NextResponse.json({ updated });
   } catch (err) {
-      console.error('PATCH /api/dashboard/agente/agenda Error:', err.message);
+      console.error('PATCH /api/agente/agenda Error:', err.message);
       const status = err.message.includes('No authenticated Google session') ? 401 : 500;
       return NextResponse.json({ error: 'internal', details: err.message }, { status });
   }
@@ -111,7 +111,7 @@ export async function DELETE(req) {
       await deleteEvent(accessToken, refreshToken, eventId);
       return NextResponse.json({ ok: true });
   } catch (err) {
-      console.error('DELETE /api/dashboard/agente/agenda Error:', err.message);
+      console.error('DELETE /api/agente/agenda Error:', err.message);
       const status = err.message.includes('No authenticated Google session') ? 401 : 500;
       return NextResponse.json({ error: 'internal', details: err.message }, { status });
   }
@@ -144,7 +144,7 @@ export async function PUT(req) {
         return NextResponse.json({ error: 'Acción no reconocida.' }, { status: 400 });
     }
   } catch (err) {
-    console.error('PUT /api/dashboard/agente/agenda error:', err.message);
+    console.error('PUT /api/agente/agenda error:', err.message);
     if (err.message.includes('No autorizado: Email de usuario no disponible en la sesión.')) {
       return NextResponse.json(
         { error: 'No autorizado para acceder a tareas/agenda. Por favor, inicia sesión.' },

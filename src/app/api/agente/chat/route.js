@@ -107,7 +107,7 @@ export async function POST(req) {
           } else if (name === 'plan_week') {
             console.log(`CHAT ROUTE: Ejecutando plan_week con weekStart=${args.weekStart}`);
             result = await fetch(
-              `${process.env.NEXT_PUBLIC_SITE_URL}/api/dashboard/agente/agenda/plan-week`,
+              `${process.env.NEXT_PUBLIC_SITE_URL}/api/agente/agenda/plan-week`,
               {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },

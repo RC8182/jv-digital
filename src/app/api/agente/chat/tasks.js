@@ -1,5 +1,5 @@
 // src/app/api/agente/chat/tasks.js
-const BASE = `${process.env.NEXTAUTH_URL}/api/dashboard/agente/agenda`;
+const BASE = `${process.env.NEXTAUTH_URL}/api/agente/agenda`;
 
 export const functions = [
   {
@@ -82,7 +82,7 @@ export const functions = [
 ];
 
 async function callAPI(action, llmArgs, userId) {
-  console.log('CHAT/TASKS: Llamando a PUT /api/dashboard/agente/agenda con action:', action, 'llmArgs:', llmArgs, 'userId:', userId);
+  console.log('CHAT/TASKS: Llamando a PUT /api/agente/agenda con action:', action, 'llmArgs:', llmArgs, 'userId:', userId);
   const res = await fetch(BASE, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
