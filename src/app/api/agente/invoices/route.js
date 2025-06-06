@@ -1,6 +1,6 @@
-// src/app/api/dashboard/invoices/route.js
+// src/app/api/agente/invoices/route.js
 import { NextResponse } from "next/server";
-import prisma from '@/lib/prisma'; // <-- CAMBIO: Importar la instancia singleton
+import prisma from '@/lib/prisma'; // <-- Importar la instancia singleton
 
 // EXPORTAR explícitamente la función GET
 // (Opcional) listar facturas de todos los clientes o filtradas
@@ -14,7 +14,8 @@ export async function GET(request) {
 
 // EXPORTAR explícitamente la función POST
 export async function POST(request) {
-  const { clientId, date, includeIGIC, includeIRPF, items } = await request.json();
+  // AÑADIDO 'dueDate' a la desestructuración del cuerpo de la petición
+  const { clientId, date, dueDate, includeIGIC, includeIRPF, items } = await request.json();
 
   // 1) Calcula el número correlativo global por año
   const year = new Date(date).getFullYear();
@@ -34,7 +35,7 @@ export async function POST(request) {
     0
   );
   const igic  = includeIGIC ? subtotal * 0.07 : 0;
-  const irpf  = includeIRPF ? subtotal * 0.07 : 0; // Tasa IRPF del 15%
+  const irpf  = includeIRPF ? subtotal * 0.07 : 0; // Tasa IRPF del 7% (ajusta si es 15% en tu negocio)
   const total = subtotal + igic - irpf;
 
   // 3) Crea en BD
@@ -43,6 +44,10 @@ export async function POST(request) {
       clientId,
       number,
       date: new Date(date),
+      dueDate: dueDate ? new Date(dueDate) : null, // <-- NUEVO: Añadido dueDate. Si es vacío, se guarda como null.
+      // Los campos 'status' y 'paidDate' se gestionan por defecto en la creación:
+      // 'status' será 'PENDING' (por el @@default en schema.prisma)
+      // 'paidDate' será 'null' (por ser opcional)
       includeIGIC,
       includeIRPF,
       subtotal,

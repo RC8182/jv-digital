@@ -31,11 +31,13 @@ export default function ChatBox() {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [currentAccessToken, setCurrentAccessToken] = useState(null);
   const [currentRefreshToken, setCurrentRefreshToken] = useState(null);
+  const [isReadyToChat, setIsReadyToChat] = useState(false); // Nuevo estado de preparación del chat
 
   // Estado para controlar la visualización del historial
   const [displayingFullHistory, setDisplayingFullHistory] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
 
+  // Lógica de inicialización de sesión y carga de historial
   useEffect(() => {
     let idToUse;
     let userIdToUse = null;
@@ -48,6 +50,7 @@ export default function ChatBox() {
       accessTokenToUse = session.accessToken;
       refreshTokenToUse = session.refreshToken;
     } else {
+      // Si no autenticado, usar o crear sessionId de localStorage
       idToUse = localStorage.getItem('agenteChatSessionId');
       if (!idToUse) {
         idToUse = uuidv4();
@@ -59,24 +62,37 @@ export default function ChatBox() {
     setCurrentAccessToken(accessTokenToUse);
     setCurrentRefreshToken(refreshTokenToUse);
 
-    // Cargar mensajes iniciales (solo los últimos X que usa el LLM)
-    const loadInitialMessages = async () => {
-      if (idToUse) {
+    // Cargar mensajes iniciales
+    const loadInitialMessages = async (sessionID) => {
+      if (sessionID) {
         try {
-          const res = await fetch(`/api/agente/chat/history?sessionId=${idToUse}`);
+          const res = await fetch(`/api/agente/chat/history?sessionId=${sessionID}`);
           if (res.ok) {
             const data = await res.json();
-            // Mostrar solo los últimos 10 mensajes o un número razonable por defecto
-            // Podrías ajustar esto para cargar un subconjunto o solo los que están en la memoria del LLM
-            setMessages(data.messages.slice(-10)); // Mostrar los últimos 10 mensajes de la BD
+            // Filtrar mensajes de función y tool para solo mostrar user/agent
+            const chatMessages = data.messages.filter(msg => msg.role === 'user' || msg.role === 'assistant');
+            setMessages(chatMessages.map(msg => ({
+              id: msg.id,
+              type: msg.role === 'user' ? 'user' : 'agent',
+              content: msg.content,
+              isAudioResponse: false, // Por defecto no es respuesta de audio
+            })));
           }
         } catch (error) {
           console.error('Error al cargar mensajes iniciales:', error);
+        } finally {
+          setIsReadyToChat(true); // Marcar como listo para chatear
         }
+      } else {
+         setIsReadyToChat(true); // Si no hay sessionID, también marcar como listo para chatear (mostrar mensaje)
       }
     };
-    loadInitialMessages();
-  }, [session, status]);
+
+    // Llamar a loadInitialMessages una vez que idToUse esté definido
+    if (idToUse) {
+        loadInitialMessages(idToUse);
+    }
+  }, [session, status]); // Dependencias: session y status de next-auth
 
   // Limpieza del ObjectURL al desmontar
   useEffect(() => {
@@ -85,7 +101,6 @@ export default function ChatBox() {
         URL.revokeObjectURL(audioObjectURLRef.current);
         audioObjectURLRef.current = null;
       }
-      // Asegurarse de detener el micrófono si el componente se desmonta
       if (audioStreamRef.current) {
         audioStreamRef.current.getTracks().forEach(track => track.stop());
       }
@@ -98,7 +113,6 @@ export default function ChatBox() {
   }, [messages]);
 
   // Callback para añadir mensajes al historial en el frontend
-  // Ahora usa `content` en lugar de `text`
   const addMessageToChat = useCallback((type, content, isAudioResponse = false, id = null) => {
     setMessages(prev => [...prev, { id: id || Date.now(), type, content, isAudioResponse }]);
   }, []);
@@ -106,13 +120,12 @@ export default function ChatBox() {
   // --- Funciones de Grabación de Voz (Microphone) ---
   const startRecording = async () => {
     if (!sessionId) {
-      alert("Error: ID de sesión no disponible. Por favor, recarga la página.");
+      alert("Error: ID de sesión no disponible. Por favor, recarga la página o inicia sesión.");
       return;
     }
     try {
-      // Solicitar acceso al micrófono
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioStreamRef.current = stream; // Guardar la referencia al stream para poder detenerlo
+      audioStreamRef.current = stream;
 
       mediaRecorderRef.current = new MediaRecorder(stream);
       audioChunksRef.current = [];
@@ -121,18 +134,15 @@ export default function ChatBox() {
         audioChunksRef.current.push(event.data);
       };
 
-      // Cuando la grabación se detiene, transcribir y procesar
       mediaRecorderRef.current.onstop = async () => {
         setIsRecording(false);
-        setVoiceProcessing(true); // Indica que el STT está en curso
+        setVoiceProcessing(true);
 
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        
         const formData = new FormData();
         formData.append('audio', audioBlob);
 
         try {
-          // Llama a la nueva ruta STT
           const response = await fetch('/api/agente/audio/stt', { 
             method: 'POST',
             body: formData,
@@ -145,17 +155,14 @@ export default function ChatBox() {
           const data = await response.json();
           const transcribedText = data.text;
           
-          setInputMessage(transcribedText); // Rellena el input con el texto transcrito
-          lastInputWasVoice.current = true; // Marca que la última entrada fue de voz
-          // No añadir el mensaje del usuario aquí, se añadirá al hacer click en "Enviar"
-          // O podrías añadirlo aquí y luego solo procesar la respuesta del agente en handleSendMessage
-          // Por simplicidad, el mensaje del usuario se añadirá cuando se haga click en "Enviar".
+          setInputMessage(transcribedText);
+          lastInputWasVoice.current = true;
 
         } catch (err) {
           console.error('Error en STT:', err);
           alert(`Error de voz: ${err.message}. Por favor, intenta de nuevo.`);
         } finally {
-          setVoiceProcessing(false); // Finaliza el STT
+          setVoiceProcessing(false);
         }
       };
 
@@ -169,49 +176,61 @@ export default function ChatBox() {
 
   const stopRecording = () => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-      mediaRecorderRef.current.stop(); // Detener la grabación del MediaRecorder
+      mediaRecorderRef.current.stop();
     }
-    if (audioStreamRef.current) { // Detener las pistas del micrófono
+    if (audioStreamRef.current) {
       audioStreamRef.current.getTracks().forEach(track => track.stop());
       audioStreamRef.current = null;
     }
-    setIsRecording(false); // Asegurar que el estado de grabación se desactive
+    setIsRecording(false);
   };
 
   // --- Función de envío principal (para texto y voz) ---
   const handleSendMessage = async (e) => {
     e.preventDefault();
     const messageToSend = inputMessage.trim();
-    if (!messageToSend || loading) return;
+    
+    // Validaciones iniciales
+    if (!messageToSend || loading || !isReadyToChat) {
+      if (!isReadyToChat) alert("El chat aún no está listo. Por favor, espera o recarga la página.");
+      return;
+    }
+    if (!sessionId) { // Esto no debería ocurrir si isReadyToChat es true, pero es un doble check
+      alert("Error crítico: ID de sesión no disponible. Por favor, recarga la página o inicia sesión.");
+      return;
+    }
 
-    // Temporalmente añadir el mensaje del usuario al chat antes de guardarlo en BD
-    // El ID real de la BD se actualizará después.
     const tempUserMessageId = Date.now(); 
     addMessageToChat('user', messageToSend, false, tempUserMessageId);
     
     setInputMessage('');
-    setTextLoading(true); // Activar carga para el chat de texto
+    setTextLoading(true);
+
+    let agentResponseContent = "Lo siento, hubo un error al procesar tu solicitud. Por favor, inténtalo de nuevo."; // Contenido por defecto para el agente
 
     try {
-      // 1. Guardar el mensaje del usuario en la BD
-      // Usamos una llamada directa aquí para evitar dependencia circular con saveMessage en la ruta de chat
-      const savedUserMessageRes = await fetch('/api/agente/chat/save-message', { // Tendremos que crear esta ruta!
+      // 1. Guardar el mensaje del usuario en la BD (ruta específica para saveMessage)
+      const saveMessagePayload = { sessionId: sessionId, role: 'user', content: messageToSend };
+      const savedUserMessageRes = await fetch('/api/agente/chat/save-message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId: sessionId, role: 'user', content: messageToSend })
+        body: JSON.stringify(saveMessagePayload)
       });
+      if (!savedUserMessageRes.ok) {
+          const errorData = await savedUserMessageRes.json().catch(() => ({ error: 'Error desconocido al guardar mensaje de usuario.' }));
+          throw new Error(`Error al guardar mensaje: ${errorData.error || savedUserMessageRes.statusText}`);
+      }
       const savedUserMessageData = await savedUserMessageRes.json();
-      // Actualizar el ID del mensaje del usuario en el estado del frontend
       setMessages(prevMessages => prevMessages.map(msg => 
-        msg.id === tempUserMessageId ? { ...msg, id: savedUserMessageData.id, content: savedUserMessageData.content } : msg
+        msg.id === tempUserMessageId ? { ...msg, id: savedUserMessageData.id } : msg
       ));
 
-      // 2. Enviar el mensaje al agente principal (SIEMPRE como TEXTO)
+      // 2. Enviar el mensaje al agente principal
       const agentRes = await fetch('/api/agente/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          question: messageToSend,
+          query: messageToSend,
           sessionId: sessionId,
           userId: currentUserId,
           accessToken: currentAccessToken,
@@ -220,26 +239,22 @@ export default function ChatBox() {
       });
 
       if (!agentRes.ok) {
-        throw new Error(`Error al comunicarse con el agente: ${agentRes.statusText}`);
+        const errorData = await agentRes.json().catch(() => ({ error: 'Error desconocido del agente.' }));
+        agentResponseContent = `Error del agente: ${errorData.error || `HTTP ${agentRes.status}`}. Por favor, revisa los logs del servidor.`;
+        throw new Error(agentResponseContent); // Lanzar el error para que el catch lo capture
       }
 
       const agentData = await agentRes.json();
-      const agentResponseText = agentData.content;
+      agentResponseContent = agentData.content; // Asignar la respuesta real del agente
 
-      // 3. Guardar la respuesta del agente en la BD (esto ya lo hace la ruta /api/agente/chat)
-      // Ahora solo añadirlo al chat del frontend
-      // La ruta /api/agente/chat ya guarda la respuesta del asistente en la BD, no necesitamos hacer otra llamada aquí.
-      // Se asume que el ID del mensaje del agente ya se maneja internamente en la ruta /api/agente/chat.
-      
-      // 4. Decidir la modalidad de respuesta (audio o texto)
+      // 3. Decidir la modalidad de respuesta (audio o texto)
       if (lastInputWasVoice.current) {
-        // Si la última entrada fue de voz, generar respuesta de voz (TTS)
-        setVoiceProcessing(true); // Activar carga para TTS
+        setVoiceProcessing(true);
         try {
           const ttsRes = await fetch('/api/agente/audio/tts', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: agentResponseText }),
+            body: JSON.stringify({ text: agentResponseContent }),
           });
 
           if (!ttsRes.ok) {
@@ -250,7 +265,6 @@ export default function ChatBox() {
           const audioBuffer = await ttsRes.arrayBuffer();
           const blob = new Blob([audioBuffer], { type: 'audio/mpeg' });
 
-          // Revocar URL anterior si existe
           if (audioObjectURLRef.current) {
             URL.revokeObjectURL(audioObjectURLRef.current);
           }
@@ -260,28 +274,27 @@ export default function ChatBox() {
             audioRef.current.src = audioObjectURLRef.current;
             audioRef.current.play();
           }
-          addMessageToChat('agent', agentResponseText, true); // Mostrar texto y marcar como respuesta de audio
+          addMessageToChat('agent', agentResponseContent, true);
 
         } catch (ttsError) {
           console.error('Error en TTS:', ttsError);
-          addMessageToChat('agent', agentResponseText, true);
+          // Si TTS falla, añadir la respuesta de texto con un indicador de error de voz
+          addMessageToChat('agent', `${agentResponseContent} (Hubo un problema al generar la voz)`, true);
         } finally {
-          setVoiceProcessing(false); // Finalizar TTS
+          setVoiceProcessing(false);
         }
       } else {
-        // Si la última entrada fue de texto, simplemente añadir la respuesta de texto
-        addMessageToChat('agent', agentResponseText, true);
+        addMessageToChat('agent', agentResponseContent, false);
       }
     } catch (error) {
       console.error('Error enviando mensaje al agente:', error);
-      addMessageToChat('agent', agentResponseText, true);
+      addMessageToChat('agent', `Error: ${error.message || 'Hubo un error inesperado. Por favor, inténtalo de nuevo.'}`, false);
     } finally {
-      setTextLoading(false); // Finalizar carga del chat de texto
-      lastInputWasVoice.current = false; // Resetear el flag para la próxima interacción
+      setTextLoading(false);
+      lastInputWasVoice.current = false;
     }
   };
 
-  // Limpia el ObjectURL una vez que el audio ha terminado de reproducirse
   const handleAudioEnded = () => {
     if (audioRef.current) {
       audioRef.current.src = '';
@@ -294,13 +307,23 @@ export default function ChatBox() {
 
   // --- Funciones de Gestión de Historial ---
   const handleLoadFullHistory = async () => {
-    if (!sessionId) return;
+    if (!sessionId) {
+      alert("ID de sesión no disponible para cargar historial.");
+      return;
+    }
     setHistoryLoading(true);
     try {
       const res = await fetch(`/api/agente/chat/history?sessionId=${sessionId}`);
       if (res.ok) {
         const data = await res.json();
-        setMessages(data.messages); // Cargar TODO el historial
+        // Mapear mensajes de DB a formato de frontend (type, content)
+        const formattedMessages = data.messages.map(msg => ({
+          id: msg.id,
+          type: msg.role === 'user' || msg.role === 'assistant' ? msg.role : 'agent', // Ajustar roles 'function', 'tool' a 'agent' para mostrar
+          content: msg.content,
+          isAudioResponse: false, // Asumimos que el historial no tiene audio guardado
+        }));
+        setMessages(formattedMessages);
         setDisplayingFullHistory(true);
       } else {
         throw new Error('Error al cargar el historial completo.');
@@ -317,7 +340,7 @@ export default function ChatBox() {
     if (!sessionId || !confirm('¿Estás seguro de que quieres borrar TODO el historial de esta conversación? Esta acción es irreversible.')) {
       return;
     }
-    setTextLoading(true); // Usamos textLoading para indicar que se está borrando
+    setTextLoading(true);
     try {
       const res = await fetch('/api/agente/chat/history', {
         method: 'DELETE',
@@ -325,7 +348,7 @@ export default function ChatBox() {
         body: JSON.stringify({ sessionId: sessionId }),
       });
       if (res.ok) {
-        setMessages([]); // Limpiar mensajes en el frontend
+        setMessages([]);
         alert('Historial borrado exitosamente.');
       } else {
         throw new Error('Error al borrar el historial.');
@@ -335,7 +358,7 @@ export default function ChatBox() {
       alert(`Error: ${error.message}`);
     } finally {
       setTextLoading(false);
-      setDisplayingFullHistory(false); // Volver al modo normal después de borrar
+      setDisplayingFullHistory(false);
     }
   };
 
@@ -351,7 +374,6 @@ export default function ChatBox() {
         body: JSON.stringify({ messageId: messageId }),
       });
       if (!res.ok) {
-        // Si falla, podrías considerar revertir el mensaje al estado o recargar para consistencia
         throw new Error('Error al eliminar el mensaje en el servidor.');
       }
     } catch (error) {
@@ -360,8 +382,7 @@ export default function ChatBox() {
     }
   };
 
-  // Renderizar los controles solo cuando la sesión esté cargada y disponible
-  const isSessionReady = status === 'authenticated' || (status === 'unauthenticated' && sessionId);
+  const isSessionReady = status === 'authenticated' || (status === 'unauthenticated' && sessionId && isReadyToChat);
 
 return (
   <div className="flex flex-col h-full w-full bg-gray-700 rounded-lg p-3 sm:p-4 relative overflow-hidden">
@@ -408,7 +429,9 @@ return (
       para scroll vertical). No necesitamos overflow-x, está bloqueado por overflow-hidden del padre.
     ======================================================================= */}
     <div className="flex-1 overflow-y-auto space-y-2 sm:space-y-3 mb-3 sm:mb-4 pr-1 sm:pr-2 pt-8 sm:pt-10">
-      {messages.length === 0 ? (
+      {messages.length === 0 && !isReadyToChat ? (
+         <p className="text-gray-400 text-center mt-8 sm:mt-10 text-sm sm:text-base">Cargando chat...</p>
+      ) : messages.length === 0 ? (
         <p className="text-gray-400 text-center mt-8 sm:mt-10 text-sm sm:text-base">
           ¡Hola! ¿En qué puedo ayudarte hoy?
         </p>
@@ -424,10 +447,6 @@ return (
               w-auto max-w-[90%] sm:max-w-[80%]
             `}
           >
-            {/* 
-              break-words y whitespace-pre-wrap evitan desbordamiento en eje X. 
-              En conjunto con overflow-hidden del padre, garantizan que no aparezca scroll horizontal.
-            */}
             <p className="text-[13px] sm:text-sm break-words whitespace-pre-wrap">
               {msg.content}
             </p>
@@ -437,7 +456,6 @@ return (
                 (Respuesta de voz)
               </span>
             )}
-            {/* Botón de eliminar mensaje */}
             <button
               onClick={() => handleDeleteMessage(msg.id)}
               className="absolute top-0 right-0 -mt-1 -mr-1 bg-gray-800 text-white rounded-full p-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
@@ -510,12 +528,12 @@ return (
           }}
           placeholder={loading ? "Procesando..." : "Escribe o habla con el agente..."}
           className="flex-1 p-2 rounded-lg bg-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-          disabled={loading}
+          disabled={loading || !isReadyToChat} // Deshabilitar si no está listo el chat
         />
         <button
           type="submit"
           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-          disabled={loading}
+          disabled={loading || !isReadyToChat} // Deshabilitar si no está listo el chat
         >
           {loading ? (
             <svg

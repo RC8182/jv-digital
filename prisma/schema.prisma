@@ -162,8 +162,20 @@ model Invoice {
   total       Float
   lines       InvoiceLine[]
   createdAt   DateTime      @default(now())
+  dueDate     DateTime?     // NUEVO: Fecha de vencimiento
+  paidDate    DateTime?     // NUEVO: Fecha de pago (null si no pagada)
+  status      InvoiceStatus @default(PENDING) 
 
   @@schema("auth")
+}
+
+enum InvoiceStatus {
+  PENDING   // Factura emitida, aún no pagada
+  PAID      // Factura pagada
+  OVERDUE   // Factura vencida y no pagada
+  CANCELLED // Factura anulada
+  
+  @@schema("auth") // <-- ¡AÑADIR ESTA LÍNEA!
 }
 
 model InvoiceLine {
@@ -184,12 +196,13 @@ model Expense {
   userId        String
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   supplier      String?
-  date          DateTime @default(now())
+  date          DateTime? // Cambiado a DateTime? para permitir null
   baseAmount    Float?
   taxAmount     Float?
   totalAmount   Float?
   filename      String
   docId         String
+  filePath      String?  // <-- NUEVO CAMPO: Ruta al archivo PDF guardado
   createdAt     DateTime @default(now())
 
   @@schema("auth")

@@ -1,3 +1,4 @@
+// src/app/[lang]/dashboard/agente/components/FiscalSummary.js
 'use client';
 import { useState } from 'react';
 
@@ -28,6 +29,8 @@ export default function FiscalSummary() {
       setLoading(false);
     }
   };
+
+  const formatCurrency = (value) => value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
 
   return (
     <section className="bg-gray-800 text-white p-4 sm:p-6 rounded w-full mb-6">
@@ -72,16 +75,23 @@ export default function FiscalSummary() {
       {summary && (
         <div className="bg-gray-700 p-4 rounded space-y-2">
           <p>Trimestre: {summary.trimestre} / {summary.year}</p>
-          <p>Ingresos Base: {summary.ingresosBase.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
-          <p>Ingresos IGIC: {summary.ingresosIGIC.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
-          <p>Ingresos IRPF: {summary.ingresosIRPF.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
-          <p>Gastos Base: {summary.gastosBase.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
-          <p>Gastos Impuesto: {summary.gastosImpuesto.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
+          <hr className="border-gray-600 my-2" /> {/* Separador */}
+          <p>Facturas Emitidas (Total): {summary.totalFacturasEmitidas} ({formatCurrency(summary.ingresosTotalFacturas)})</p> {/* NUEVO */}
+          <p>Facturas Pagadas: {summary.totalFacturasPagadas} ({formatCurrency(summary.ingresosPagadosTotal)})</p> {/* NUEVO */}
+          <p>Facturas Pendientes: {summary.totalFacturasPendientes} ({formatCurrency(summary.ingresosPendientesTotal)})</p> {/* NUEVO */}
+          <p>Ingresos Base Contable: {formatCurrency(summary.ingresosBase)}</p>
+          <p>Ingresos IGIC: {formatCurrency(summary.ingresosIGIC)}</p>
+          <p>Ingresos IRPF Retenido: {formatCurrency(summary.ingresosIRPF)}</p>
+          <hr className="border-gray-600 my-2" /> {/* Separador */}
+          <p>Gastos Registrados (Total): {summary.totalGastosRegistrados}</p> {/* NUEVO */}
+          <p>Gastos Base Contable: {formatCurrency(summary.gastosBase)}</p>
+          <p>Gastos Impuesto (IVA/IGIC): {formatCurrency(summary.gastosImpuesto)}</p>
+          <hr className="border-gray-600 my-2" /> {/* Separador */}
           <p className="font-bold">
-            Modelo 130 (20%): {summary.modelo130.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+            Modelo 130 (20% IRPF Estimado): {formatCurrency(summary.modelo130)}
           </p>
           <p className="font-bold">
-            Modelo 303: {summary.modelo303.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+            Modelo 303 (IVA/IGIC): {formatCurrency(summary.modelo303)}
           </p>
         </div>
       )}

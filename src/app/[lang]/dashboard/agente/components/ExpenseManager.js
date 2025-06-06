@@ -64,15 +64,16 @@ export default function ExpenseManager() {
         body: formData,
       });
       if (!res.ok) {
-        const { error } = await res.json();
-        throw new Error(error ?? `Status ${res.status}`);
+        const { error, details } = await res.json(); // Leer detalles del error
+        throw new Error(error ?? `Status ${res.status}: ${details || 'Unknown error'}`);
       }
       setMessage('Gasto subido e indexado correctamente.');
       setSelectedFile(null);
-      fetchExpenseList();
+      e.target.reset(); // Limpiar el input de archivo
+      fetchExpenseList(); // Volver a cargar la lista para ver el nuevo gasto
     } catch (err) {
       console.error('Error al subir gasto:', err);
-      setMessage('Error al subir el PDF de gasto.');
+      setMessage(`Error al subir el PDF de gasto: ${err.message}`);
     } finally {
       setUploading(false);
     }
@@ -80,17 +81,23 @@ export default function ExpenseManager() {
 
   /* ─── eliminar gasto (DELETE) ─── */
   const handleDelete = async (id, docId) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar este gasto? Esto borrará el registro y el documento asociado.')) {
+        return;
+    }
     try {
       const res = await fetch(`/api/agente/contabilidad/gastos?id=${id}&docId=${docId}`, {
         method: 'DELETE',
       });
-      if (!res.ok) throw new Error(`Status ${res.status}`);
+      if (!res.ok) {
+        const { error, details } = await res.json();
+        throw new Error(error ?? `Status ${res.status}: ${details || 'Unknown error'}`);
+      }
       const { message: msg } = await res.json();
       setMessage(msg);
       fetchExpenseList();
     } catch (err) {
       console.error('Error al eliminar gasto:', err);
-      setMessage('Error al eliminar el gasto.');
+      setMessage(`Error al eliminar el gasto: ${err.message}`);
     }
   };
 
@@ -99,7 +106,8 @@ export default function ExpenseManager() {
     setEditingId(expense.id);
     setFormValues({
       supplier:    expense.supplier || '',
-      date:        expense.date ? expense.date.split('T')[0] : '',
+      // Formatear la fecha para input type="date"
+      date:        expense.date ? new Date(expense.date).toISOString().split('T')[0] : '',
       baseAmount:  expense.baseAmount != null ? expense.baseAmount : '',
       taxAmount:   expense.taxAmount != null ? expense.taxAmount : '',
       totalAmount: expense.totalAmount != null ? expense.totalAmount : '',
@@ -119,7 +127,7 @@ export default function ExpenseManager() {
     try {
       const payload = {
         supplier:    formValues.supplier,
-        date:        formValues.date || null,
+        date:        formValues.date ? new Date(formValues.date) : null, // Convertir a Date object o null
         baseAmount:  formValues.baseAmount === '' ? null : parseFloat(formValues.baseAmount),
         taxAmount:   formValues.taxAmount === '' ? null : parseFloat(formValues.taxAmount),
         totalAmount: formValues.totalAmount === '' ? null : parseFloat(formValues.totalAmount),
@@ -130,13 +138,16 @@ export default function ExpenseManager() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error('Error al guardar');
+      if (!res.ok) {
+        const { error, details } = await res.json();
+        throw new Error(error ?? `Status ${res.status}: ${details || 'Unknown error'}`);
+      }
       setMessage('Gasto actualizado correctamente.');
       setEditingId(null);
       fetchExpenseList();
     } catch (err) {
       console.error(err);
-      setMessage('No se pudo actualizar el gasto.');
+      setMessage(`No se pudo actualizar el gasto: ${err.message}`);
     }
   };
 
@@ -171,8 +182,8 @@ export default function ExpenseManager() {
         />
         <button
           type="submit"
-          disabled={uploading}
-          className="w-full sm:w-auto bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-bold text-center"
+          disabled={uploading || !selectedFile} // Deshabilitar si no hay archivo seleccionado
+          className="w-full sm:w-auto bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-bold text-center disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {uploading ? 'Subiendo…' : 'Subir Gasto'}
         </button>
@@ -191,6 +202,7 @@ export default function ExpenseManager() {
               id,
               filename,
               docId,
+              filePath, // <-- NUEVO: filePath para la descarga
               createdAt,
               supplier,
               date,
@@ -210,7 +222,7 @@ export default function ExpenseManager() {
                   <div className="w-full sm:w-auto">
                     <span className="block text-sm sm:text-base font-medium">{filename}</span>
                     <span className="block text-xs sm:text-sm text-gray-300">
-                      {new Date(createdAt).toLocaleDateString()}
+                      Cargado: {new Date(createdAt).toLocaleDateString()}
                     </span>
                     {supplier && (
                       <span className="block text-xs text-gray-400">
@@ -219,13 +231,22 @@ export default function ExpenseManager() {
                     )}
                     {date && (
                       <span className="block text-xs text-gray-400">
-                        Fecha: {new Date(date).toLocaleDateString()}
+                        Fecha Gasto: {new Date(date).toLocaleDateString()}
+                      </span>
+                    )}
+                    {baseAmount != null && ( // Mostrar Base imponible e Impuesto
+                      <span className="block text-xs text-gray-400">
+                        Base Imponible: {baseAmount.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                      </span>
+                    )}
+                    {taxAmount != null && (
+                      <span className="block text-xs text-gray-400">
+                        Impuesto: {taxAmount.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
                       </span>
                     )}
                     {totalAmount != null && (
-                      <span className="block text-xs text-gray-400">
-                        Total:{' '}
-                        {totalAmount.toLocaleString('es-ES', {
+                      <span className="block text-sm text-gray-200 font-semibold">
+                        Total: {totalAmount.toLocaleString('es-ES', {
                           style: 'currency',
                           currency: 'EUR',
                         })}
@@ -240,6 +261,17 @@ export default function ExpenseManager() {
                       >
                         Editar
                       </button>
+                    )}
+                    {!isEditing && filePath && ( // <-- NUEVO: Botón de descarga si filePath existe
+                      <a
+                        href={filePath}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded font-bold text-sm text-white"
+                        download={filename} // Sugiere el nombre de archivo original
+                      >
+                        Descargar
+                      </a>
                     )}
                     {!isEditing && (
                       <button
