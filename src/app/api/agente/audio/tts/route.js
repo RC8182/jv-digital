@@ -1,12 +1,12 @@
 // src/app/api/agente/audio/tts/route.js
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
-
+import { getOpenAI } from '@/lib/openai.js';
 export const runtime = 'nodejs';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 
 export async function POST(req) {
+  const openai =await getOpenAI();
   try {
     const { text } = await req.json(); // Esperamos que el texto venga en el cuerpo JSON
 

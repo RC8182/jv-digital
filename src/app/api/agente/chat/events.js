@@ -610,3 +610,48 @@ export async function search_expenses(args) {
     return { error: `Hubo un error al buscar en los documentos de gastos: ${error.message}` };
   }
 }
+
+/* ------------------------------------------------------------------
+   NUEVA FUNCIÓN: get_quarter_summary
+-------------------------------------------------------------------*/
+functions.push({
+  name: 'get_quarter_summary',
+  description:
+    'Devuelve un resumen fiscal-contable de un trimestre: ingresos, gastos, modelos 130 y 303, etc.',
+  parameters: {
+    type: 'object',
+    properties: {
+      trimestre: {
+        type: 'integer',
+        enum: [1, 2, 3, 4],
+        description: 'Trimestre del año (1-4)'
+      },
+      year: {
+        type: 'integer',
+        description: 'Año (ej. 2025)'
+      },
+      epigrafe: {
+        type: 'string',
+        description:
+          'Código de epígrafe IAE a filtrar (opcional). Usa "all" para incluir todos.',
+        default: 'all'
+      }
+    },
+    required: ['trimestre', 'year']
+  }
+});
+
+/* Wrapper ― NO necesita tokens de Google ----------------------------------*/
+export async function get_quarter_summary(args) {
+  const { trimestre, year, epigrafe = 'all' } = args;
+
+  const url = `${
+    process.env.NEXT_PUBLIC_SITE_URL
+  }/api/agente/contabilidad/trimestral?trimestre=${trimestre}&year=${year}&epigrafe=${encodeURIComponent(
+    epigrafe
+  )}`;
+
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status} al obtener resumen trimestral`);
+  return res.json();
+}

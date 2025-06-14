@@ -2,7 +2,6 @@ import { useState } from 'react';
 import useWindData      from '../hooks/useWindData';
 import WindCard         from './WindCardMap';
 import HistoryTable     from '../components/HistoryTable';
-import WindTimeSeries from './directionGauge';
 
 export default function AnemometroPage({idioma}) {
   const [mode,setMode]   = useState('raw');       // raw | 3min | 15min | hourly

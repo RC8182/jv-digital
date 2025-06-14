@@ -1,11 +1,11 @@
-// File: src/app/api/dashboard/clients/[id]/route.js
+// File: src/app/api/clients/[id]/route.js
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 /**
- * GET /api/dashboard/clients/:id
+ * GET /api/clients/:id
  * Obtiene un cliente por su ID
  */
 export async function GET(request, { params }) {
@@ -21,7 +21,7 @@ export async function GET(request, { params }) {
 }
 
 /**
- * PUT /api/dashboard/clients/:id
+ * PUT /api/clients/:id
  * Actualiza un cliente
  * Body: { name?, address?, phone?, email?, vat?, city? }
  */
@@ -36,7 +36,7 @@ export async function PUT(request, { params }) {
 }
 
 /**
- * DELETE /api/dashboard/clients/:id
+ * DELETE /api/clients/:id
  * Elimina un cliente
  */
 export async function DELETE(request, { params }) {

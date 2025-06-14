@@ -1,5 +1,6 @@
-import OpenAI from 'openai';
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+import { getOpenAI } from '@/lib/openai.js';
+
+const openai =await getOpenAI();
 
 export async function embed(text) {
   const { data } = await openai.embeddings.create({

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "auth"."Client" ALTER COLUMN "epigrafesIAE" DROP NOT NULL,
+ALTER COLUMN "epigrafesIAE" DROP DEFAULT,
+ALTER COLUMN "epigrafesIAE" SET DATA TYPE TEXT;

@@ -1,25 +1,27 @@
-// src/app/[lang]/dashboard/agente/components/ExpenseManager.js
+// src/app/[lang]/dashboard/agente/components/ExpenseManager.jsx
 'use client';
+
 import { useState, useEffect } from 'react';
 
-export default function ExpenseManager() {
-  /* ─────────── estados ─────────── */
+export default function ExpenseManager({ misEpigrafes }) {
+  // ─────────── estados ───────────
   const [selectedFile, setSelectedFile] = useState(null);
-  const [uploading,    setUploading]    = useState(false);
-  const [message,      setMessage]      = useState('');
-  const [expenseList,  setExpenseList]  = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [expenseList, setExpenseList] = useState([]);
+  const [editingId, setEditingId] = useState(null);
 
-  // Para la edición inline
-  const [editingId,    setEditingId]    = useState(null);
-  const [formValues,   setFormValues]   = useState({
+  // Ahora epigrafeIAE es un array de strings
+  const [formValues, setFormValues] = useState({
     supplier:    '',
     date:        '',
     baseAmount:  '',
     taxAmount:   '',
     totalAmount: '',
+    epigrafeIAE: [] // arreglo vacío inicialmente
   });
 
-  /* ─── cargar lista de gastos ─── */
+  // ─── cargar lista de gastos ───
   const fetchExpenseList = async () => {
     try {
       const res = await fetch('/api/agente/contabilidad/gastos');
@@ -36,7 +38,7 @@ export default function ExpenseManager() {
     fetchExpenseList();
   }, []);
 
-  /* ─── seleccionar archivo para subir ─── */
+  // ─── seleccionar archivo para subir ───
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file?.type === 'application/pdf') {
@@ -44,10 +46,11 @@ export default function ExpenseManager() {
       setMessage('');
     } else {
       setMessage('Selecciona un PDF válido.');
+      setSelectedFile(null);
     }
   };
 
-  /* ─── subir gasto (POST) ─── */
+  // ─── subir gasto (POST) ───
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!selectedFile) return;
@@ -64,13 +67,17 @@ export default function ExpenseManager() {
         body: formData,
       });
       if (!res.ok) {
-        const { error, details } = await res.json(); // Leer detalles del error
-        throw new Error(error ?? `Status ${res.status}: ${details || 'Unknown error'}`);
+        const { error, details } = await res.json();
+        if (error === 'duplicado') {
+          throw new Error('Este PDF ya fue subido anteriormente.');
+        } else {
+          throw new Error(error ?? `Status ${res.status}: ${details || 'Unknown error'}`);
+        }
       }
       setMessage('Gasto subido e indexado correctamente.');
       setSelectedFile(null);
-      e.target.reset(); // Limpiar el input de archivo
-      fetchExpenseList(); // Volver a cargar la lista para ver el nuevo gasto
+      e.target.reset();
+      fetchExpenseList();
     } catch (err) {
       console.error('Error al subir gasto:', err);
       setMessage(`Error al subir el PDF de gasto: ${err.message}`);
@@ -79,11 +86,9 @@ export default function ExpenseManager() {
     }
   };
 
-  /* ─── eliminar gasto (DELETE) ─── */
+  // ─── eliminar gasto (DELETE) ───
   const handleDelete = async (id, docId) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar este gasto? Esto borrará el registro y el documento asociado.')) {
-        return;
-    }
+    if (!confirm('¿Estás seguro de que quieres eliminar este gasto?')) return;
     try {
       const res = await fetch(`/api/agente/contabilidad/gastos?id=${id}&docId=${docId}`, {
         method: 'DELETE',
@@ -101,36 +106,50 @@ export default function ExpenseManager() {
     }
   };
 
-  /* ─── iniciar edición inline ─── */
+  // ─── iniciar edición inline ───
   const startEditing = (expense) => {
+    if (expense.processingStatus !== 'listo') {
+      setMessage(`No puedes editar un gasto que está en estado "${expense.processingStatus}".`);
+      return;
+    }
     setEditingId(expense.id);
+
     setFormValues({
       supplier:    expense.supplier || '',
-      // Formatear la fecha para input type="date"
       date:        expense.date ? new Date(expense.date).toISOString().split('T')[0] : '',
       baseAmount:  expense.baseAmount != null ? expense.baseAmount : '',
       taxAmount:   expense.taxAmount != null ? expense.taxAmount : '',
       totalAmount: expense.totalAmount != null ? expense.totalAmount : '',
+      // epigrafeIAE ya viene como arreglo desde la BD
+      epigrafeIAE: Array.isArray(expense.epigrafeIAE) ? expense.epigrafeIAE : []
     });
     setMessage('');
   };
 
-  /* ─── manejar cambios en los inputs de edición ─── */
+  // ─── manejar cambios en inputs de edición ───
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
+
+    // Para el select múltiple, tomamos todas las opciones seleccionadas
+    if (name === 'epigrafeIAE') {
+      const selectedOptions = Array.from(e.target.selectedOptions).map(o => o.value);
+      setFormValues(prev => ({ ...prev, epigrafeIAE: selectedOptions }));
+    } else {
+      setFormValues(prev => ({ ...prev, [name]: value }));
+    }
   };
 
-  /* ─── guardar cambios de edición (PATCH) ─── */
+  // ─── guardar cambios de edición (PATCH) ───
   const submitEdit = async (e) => {
     e.preventDefault();
     try {
       const payload = {
         supplier:    formValues.supplier,
-        date:        formValues.date ? new Date(formValues.date) : null, // Convertir a Date object o null
+        date:        formValues.date || null,
         baseAmount:  formValues.baseAmount === '' ? null : parseFloat(formValues.baseAmount),
         taxAmount:   formValues.taxAmount === '' ? null : parseFloat(formValues.taxAmount),
         totalAmount: formValues.totalAmount === '' ? null : parseFloat(formValues.totalAmount),
+        epigrafeIAE: formValues.epigrafeIAE // Ya es un array de códigos
       };
 
       const res = await fetch(`/api/agente/contabilidad/gastos/${editingId}`, {
@@ -146,12 +165,12 @@ export default function ExpenseManager() {
       setEditingId(null);
       fetchExpenseList();
     } catch (err) {
-      console.error(err);
+      console.error('Error al actualizar gasto:', err);
       setMessage(`No se pudo actualizar el gasto: ${err.message}`);
     }
   };
 
-  /* ─── cancelar edición ─── */
+  // ─── cancelar edición ───
   const cancelEdit = () => {
     setEditingId(null);
     setFormValues({
@@ -160,20 +179,18 @@ export default function ExpenseManager() {
       baseAmount:  '',
       taxAmount:   '',
       totalAmount: '',
+      epigrafeIAE: []
     });
     setMessage('');
   };
 
-  /* ─── render ─── */
+  // ─── render ───
   return (
     <section className="bg-gray-800 text-white p-4 sm:p-6 rounded w-full">
       <h2 className="text-2xl font-semibold mb-4">Administrador de Gastos (PDF)</h2>
 
       {/* ── Formulario de subida ── */}
-      <form
-        onSubmit={handleUpload}
-        className="flex flex-col sm:flex-row gap-3 mb-4 items-center w-full"
-      >
+      <form onSubmit={handleUpload} className="flex flex-col sm:flex-row gap-3 mb-4 items-center w-full">
         <input
           type="file"
           accept=".pdf"
@@ -182,7 +199,7 @@ export default function ExpenseManager() {
         />
         <button
           type="submit"
-          disabled={uploading || !selectedFile} // Deshabilitar si no hay archivo seleccionado
+          disabled={uploading || !selectedFile}
           className="w-full sm:w-auto bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-bold text-center disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {uploading ? 'Subiendo…' : 'Subir Gasto'}
@@ -202,21 +219,22 @@ export default function ExpenseManager() {
               id,
               filename,
               docId,
-              filePath, // <-- NUEVO: filePath para la descarga
+              filePath,
               createdAt,
               supplier,
               date,
               baseAmount,
               taxAmount,
               totalAmount,
+              epigrafeIAE,
+              processingStatus,
+              processingError
             } = expense;
+
             const isEditing = editingId === id;
 
             return (
-              <li
-                key={id}
-                className="bg-gray-700 px-4 py-3 rounded w-full"
-              >
+              <li key={id} className="bg-gray-700 px-4 py-3 rounded w-full">
                 {/* ── Información básica ── */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                   <div className="w-full sm:w-auto">
@@ -234,7 +252,7 @@ export default function ExpenseManager() {
                         Fecha Gasto: {new Date(date).toLocaleDateString()}
                       </span>
                     )}
-                    {baseAmount != null && ( // Mostrar Base imponible e Impuesto
+                    {baseAmount != null && (
                       <span className="block text-xs text-gray-400">
                         Base Imponible: {baseAmount.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
                       </span>
@@ -246,29 +264,49 @@ export default function ExpenseManager() {
                     )}
                     {totalAmount != null && (
                       <span className="block text-sm text-gray-200 font-semibold">
-                        Total: {totalAmount.toLocaleString('es-ES', {
-                          style: 'currency',
-                          currency: 'EUR',
-                        })}
+                        Total: {totalAmount.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
                       </span>
                     )}
+                    {/* ── Mostrar epígrafes IAE ── */}
+                    {Array.isArray(epigrafeIAE) && epigrafeIAE.length > 0 && (
+                      <span className="block text-xs text-gray-300">
+                        Epígrafes IAE: {epigrafeIAE.join(', ')}
+                      </span>
+                    )}
+                    {/* ── Estado de procesamiento ── */}
+                    <span className="mt-1 block text-xs font-medium">
+                      Estado:{' '}
+                      {processingStatus === 'pendiente' && <span className="text-yellow-300">Pendiente</span>}
+                      {processingStatus === 'en_proceso' && <span className="text-blue-300">En proceso</span>}
+                      {processingStatus === 'listo' && <span className="text-green-300">Listo</span>}
+                      {processingStatus === 'error' && <span className="text-red-400">Error</span>}
+                    </span>
+                    {processingStatus === 'error' && processingError && (
+                      <p className="mt-1 text-xs text-red-400">{processingError}</p>
+                    )}
                   </div>
+
                   <div className="mt-2 sm:mt-0 flex items-center gap-2">
                     {!isEditing && (
                       <button
                         onClick={() => startEditing(expense)}
-                        className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded font-bold text-sm"
+                        disabled={processingStatus !== 'listo'}
+                        className={`px-3 py-1 rounded font-bold text-sm ${
+                          processingStatus === 'listo'
+                            ? 'bg-blue-600 hover:bg-blue-700'
+                            : 'bg-gray-600 cursor-not-allowed opacity-50'
+                        }`}
                       >
                         Editar
                       </button>
                     )}
-                    {!isEditing && filePath && ( // <-- NUEVO: Botón de descarga si filePath existe
+                    {!isEditing && filePath && (
                       <a
                         href={filePath}
                         target="_blank"
                         rel="noopener noreferrer"
+                        download={filename}
                         className="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded font-bold text-sm text-white"
-                        download={filename} // Sugiere el nombre de archivo original
                       >
                         Descargar
                       </a>
@@ -342,6 +380,26 @@ export default function ExpenseManager() {
                         className="w-full p-2 rounded text-black"
                         placeholder="0.00"
                       />
+                    </div>
+                    <div>
+                      <label className="block text-xs">Epígrafes IAE</label>
+                      <select
+                        name="epigrafeIAE"
+                        multiple
+                        value={formValues.epigrafeIAE}
+                        onChange={handleChange}
+                        className="w-full p-2 rounded text-black"
+                        size={Math.min(misEpigrafes.length, 5)}
+                      >
+                        {misEpigrafes.map((codigo) => (
+                          <option key={codigo} value={codigo}>
+                            {codigo}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-gray-400 mt-1">
+                        (Mantén Ctrl ⌘ en Mac / Ctrl en Windows para seleccionar varios)
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <button

@@ -1,13 +1,9 @@
-// File: src/app/api/dashboard/clients/route.js
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-/**
- * GET /api/dashboard/clients
- * Devuelve la lista de clientes
- */
+/* ───────────── GET /api/clients ───────────── */
 export async function GET() {
   const list = await prisma.client.findMany({
     select: {
@@ -17,33 +13,33 @@ export async function GET() {
       phone: true,
       email: true,
       nif: true,
-      city: true
+      city: true,
+      epigrafesIAE: true          // ← nombre correcto
     }
   })
   return NextResponse.json(list)
 }
 
-/**
- * POST /api/dashboard/clients
- * Crea un nuevo cliente
- * Body: { name, address, phone, email, nif, city }
- */
+/* ───────────── POST /api/clients ─────────────
+   Body: { name, address?, phone?, email?, nif?, city?, epigrafesIAE? }
+------------------------------------------------*/
 export async function POST(request) {
   const {
     name,
-    address = "",
-    phone   = "",
-    email   = "",
-    nif     = "",
-    city    = ""
+    address       = '',
+    phone         = '',
+    email         = '',
+    nif           = '',
+    city          = '',
+    epigrafesIAE  = ''          // string con el código seleccionado (opcional)
   } = await request.json()
 
   if (!name) {
-    return NextResponse.json({ error: "El nombre es obligatorio" }, { status: 400 })
+    return NextResponse.json({ error: 'El nombre es obligatorio' }, { status: 400 })
   }
 
   const created = await prisma.client.create({
-    data: { name, address, phone, email, nif, city }
+    data: { name, address, phone, email, nif, city, epigrafesIAE }
   })
 
   return NextResponse.json(created)

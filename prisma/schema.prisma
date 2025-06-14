@@ -1,5 +1,3 @@
-// prisma/schema.prisma
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -17,21 +15,21 @@ generator client {
 /////////////////////////
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  epigrafesIAE   String[]  @default([])   // 
+  emailVerified  DateTime?
+  image          String?
+  password       String?
 
-  accounts Account[]
-  sessions Session[]
-  tasks    Task[]
-  expenses Expense[]   
+  accounts       Account[]
+  sessions       Session[]
+  tasks          Task[]
+  expenses       Expense[]
 
   @@schema("auth")
 }
-
 
 model Account {
   id                 String  @id @default(cuid())
@@ -50,7 +48,7 @@ model Account {
   oauth_token        String?
   refresh_token_expires_in Int?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade) // Ya tenía onDelete: Cascade
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@schema("auth")
@@ -62,7 +60,7 @@ model Session {
   userId       String
   expires      DateTime
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade) // Ya tenía onDelete: Cascade
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@schema("auth")
 }
@@ -87,20 +85,17 @@ model Task {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  // Campos de contexto
-  category          String?
-  project           String?
-  clientName        String?
-  recurrent         String?
-  requiredTools     String[] // No opcional aquí, solo puede ser una lista vacía si no hay herramientas
-  relatedDocumentIds String[] // No opcional aquí, solo puede ser una lista vacía si no hay documentos
-
-  // NUEVOS CAMPOS DE PROGRESO
-  progress          Int?     @default(0) // Progreso en porcentaje (0-100)
-  actualHours       Float?   @default(0) // Horas reales invertidas
+  category           String?
+  project            String?
+  clientName         String?
+  recurrent          String?
+  requiredTools      String[]
+  relatedDocumentIds String[]
+  progress           Int?     @default(0)
+  actualHours        Float?   @default(0)
 
   userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade) // <-- ¡AÑADIDO onDelete: Cascade!
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@schema("auth")
 }
@@ -133,13 +128,13 @@ model Client {
   city     String?
   products Product[]
   invoices Invoice[]
-
+  epigrafesIAE String?
   @@schema("auth")
 }
 
 model Product {
   id       Int     @id @default(autoincrement())
-  client   Client  @relation(fields: [clientId], references: [id], onDelete: Cascade) // <-- ¡AÑADIDO onDelete: Cascade!
+  client   Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
   clientId Int
   code     String?
   name     String
@@ -150,7 +145,7 @@ model Product {
 
 model Invoice {
   id          Int           @id @default(autoincrement())
-  client      Client        @relation(fields: [clientId], references: [id], onDelete: Cascade) // <-- ¡AÑADIDO onDelete: Cascade!
+  client      Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
   clientId    Int
   number      String
   date        DateTime
@@ -162,25 +157,25 @@ model Invoice {
   total       Float
   lines       InvoiceLine[]
   createdAt   DateTime      @default(now())
-  dueDate     DateTime?     // NUEVO: Fecha de vencimiento
-  paidDate    DateTime?     // NUEVO: Fecha de pago (null si no pagada)
-  status      InvoiceStatus @default(PENDING) 
+  dueDate     DateTime?     
+  paidDate    DateTime?     
+  status      InvoiceStatus @default(PENDING)
 
   @@schema("auth")
 }
 
 enum InvoiceStatus {
-  PENDING   // Factura emitida, aún no pagada
-  PAID      // Factura pagada
-  OVERDUE   // Factura vencida y no pagada
-  CANCELLED // Factura anulada
-  
-  @@schema("auth") // <-- ¡AÑADIR ESTA LÍNEA!
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+
+  @@schema("auth")
 }
 
 model InvoiceLine {
   id          Int     @id @default(autoincrement())
-  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade) // <-- ¡AÑADIDO onDelete: Cascade!
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   invoiceId   Int
   code        String?
   description String
@@ -192,20 +187,22 @@ model InvoiceLine {
 }
 
 model Expense {
-  id            Int      @id @default(autoincrement())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  supplier      String?
-  date          DateTime? // Cambiado a DateTime? para permitir null
-  baseAmount    Float?
-  taxAmount     Float?
-  totalAmount   Float?
-  filename      String
-  docId         String
-  filePath      String?  // <-- NUEVO CAMPO: Ruta al archivo PDF guardado
-  createdAt     DateTime @default(now())
+  id               Int      @id @default(autoincrement())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  supplier         String?
+  date             DateTime?
+  baseAmount       Float?
+  taxAmount        Float?
+  totalAmount      Float?
+  epigrafeIAE      String[] // ← Cambiado a arreglo de strings
+  filename         String
+  docId            String
+  filePath         String?
+  fileHash         String?
+  processingStatus String   @default("pendiente")
+  processingError  String?
+  createdAt        DateTime @default(now())
 
   @@schema("auth")
 }
-
-

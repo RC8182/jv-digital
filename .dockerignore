@@ -1,0 +1,4 @@
+# Mantén secretos fuera de la imagen
+# Cache / basura
+node_modules
+.next/cache

@@ -3,7 +3,7 @@
 
 import { NextResponse }  from 'next/server';
 import { QdrantClient }  from '@qdrant/js-client-rest';
-import OpenAI            from 'openai';
+import { getOpenAI } from '@/lib/openai.js';
 import { randomUUID }    from 'node:crypto';
 import * as pdfjs        from 'pdfjs-dist/legacy/build/pdf.js';
 import 'pdfjs-dist/legacy/build/pdf.worker.js';
@@ -12,7 +12,7 @@ export const runtime = 'nodejs';
 
 /* ── clientes ─────────────────────────────────────────────── */
 const qdrant = new QdrantClient({ url: process.env.QDRANT_URL });
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 
 /* ── helpers ──────────────────────────────────────────────── */
 async function extractText(buffer) {
@@ -73,6 +73,7 @@ export async function GET() {
 
 /* ── POST /api/agente/pdf ─────────────────────────────────── */
 export async function POST(req) {
+  const openai = getOpenAI();
   try {
     const form = await req.formData();
     const file = form.get('file');
