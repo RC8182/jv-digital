@@ -191,6 +191,34 @@ export default function ExpenseManager({ misEpigrafes }) {
 
       {/* ── Formulario de subida ── */}
       <form onSubmit={handleUpload} className="flex flex-col sm:flex-row gap-3 mb-4 items-center w-full">
+        {/* Botón solo visible en móvil para digitalizar factura (imagen) */}
+        <label className="block w-full sm:hidden">
+          <button
+            type="button"
+            className="w-full bg-teal-600 text-white px-4 py-2 rounded mb-2 font-semibold shadow-md hover:bg-teal-700 transition-colors"
+            onClick={() => document.getElementById('mobile-capture-input').click()}
+          >
+            Digitalizar factura (foto)
+          </button>
+          <input
+            id="mobile-capture-input"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            style={{ display: 'none' }}
+            onChange={e => {
+              const file = e.target.files[0];
+              if (file && file.type.startsWith('image/')) {
+                setSelectedFile(file);
+                setMessage('');
+              } else {
+                setMessage('Selecciona una imagen válida.');
+                setSelectedFile(null);
+              }
+            }}
+          />
+        </label>
+        {/* Input de PDF (visible siempre) */}
         <input
           type="file"
           accept=".pdf"
@@ -200,11 +228,22 @@ export default function ExpenseManager({ misEpigrafes }) {
         <button
           type="submit"
           disabled={uploading || !selectedFile}
-          className="w-full sm:w-auto bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-bold text-center disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-blue-600 text-white px-4 py-2 rounded font-semibold shadow-md hover:bg-blue-700 transition-colors disabled:opacity-50"
         >
-          {uploading ? 'Subiendo…' : 'Subir Gasto'}
+          {uploading ? 'Subiendo...' : 'Subir gasto'}
         </button>
       </form>
+      {/* Previsualización de imagen si se selecciona una imagen */}
+      {selectedFile && selectedFile.type && selectedFile.type.startsWith('image/') && (
+        <div className="mb-4 flex flex-col items-center">
+          <img
+            src={URL.createObjectURL(selectedFile)}
+            alt="Previsualización de la factura"
+            className="max-h-48 rounded shadow border mb-2"
+          />
+          <span className="text-gray-400 text-xs">Previsualización de la imagen seleccionada</span>
+        </div>
+      )}
 
       {message && <p className="mb-3 text-sm sm:text-base">{message}</p>}
 

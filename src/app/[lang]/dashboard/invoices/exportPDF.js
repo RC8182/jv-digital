@@ -146,8 +146,8 @@ export function exportPDF({
   /* ───────────  TARJETA BANCO  ─────────── */
   const bankLines = [
     "TRANSFERENCIA A LA NUEVA CUENTA",
-    "IBAN: ES11 1465 0100 9317 1607 1257",
-    "SWIFT: INGDESMMXXX  BANCO ING"
+    "IBAN: ES55 1465 0100 95 1768028805",
+    "BIC: INGDESMMXXX  BANCO ING"
   ];
   const bankW = 300;
   const wrappedBank = bankLines.flatMap(l => doc.splitTextToSize(l, bankW - padding*2));

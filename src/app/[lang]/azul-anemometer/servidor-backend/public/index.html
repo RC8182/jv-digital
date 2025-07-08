@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Anemómetro ESP32</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard Anemómetro</h1>
+            <nav class="tabs">
+                <button class="tab-link active" data-tab="configuracion">Configuración</button>
+                <button class="tab-link" data-tab="diagnostico">Diagnóstico</button>
+                <button class="tab-link" data-tab="alertas">Alertas</button>
+                <button class="tab-link" onclick="openTab(event, 'logs')">Logs</button>
+            </nav>
+        </header>
+
+        <div id="reboot-status-banner" class="reboot-banner"></div>
+
+        <main>
+            <div id="estado-tiempo-real" class="card estado-tiempo-real">
+                <h2>Estado en Tiempo Real</h2>
+                <div class="estado-grid">
+                    <div class="estado-item">
+                        <span class="icon-velocidad" title="Velocidad del viento">💨</span>
+                        <span id="velocidad-valor">--</span> <span class="unidad">m/s</span>
+                        <div class="label">Velocidad</div>
+                    </div>
+                    <div class="estado-item">
+                        <span class="icon-direccion" title="Dirección del viento">🧭</span>
+                        <span id="direccion-valor">--</span> <span class="unidad">°</span>
+                        <div class="label">Dirección</div>
+                    </div>
+                    <div class="estado-item">
+                        <span class="icon-bateria" title="Batería principal">🔋</span>
+                        <span id="bateria-valor">--</span> <span class="unidad">%</span>
+                        <div class="label">Batería</div>
+                    </div>
+                    <div class="estado-item">
+                        <span class="icon-voltaje" title="Voltaje">⚡</span>
+                        <span id="voltaje-valor">--</span> <span class="unidad">mV</span>
+                        <div class="label">Voltaje</div>
+                    </div>
+                    <div class="estado-item">
+                        <span class="icon-modo" title="Modo actual">🌗</span>
+                        <span id="modo-valor">--</span>
+                        <div class="label">Modo</div>
+                    </div>
+                    <div class="estado-item">
+                        <span class="icon-rssi" title="Señal RSSI">📶</span>
+                        <span id="rssi-valor">--</span> <span class="unidad">dBm</span>
+                        <div class="label">RSSI</div>
+                    </div>
+                    <div class="estado-item">
+                        <span class="icon-timestamp" title="Última actualización">⏰</span>
+                        <span id="timestamp-valor">--</span>
+                        <div class="label">Actualización</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="configuracion" class="tab-content active">
+                <div class="card">
+                    <h2>Configuración Actual (valores brutos)</h2>
+                    <div id="current-config">
+                        <p>Cargando configuración...</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Establecer Nueva Configuración</h2>
+                    <form id="config-form">
+                        <div class="form-group">
+                            <label for="wakeTime">Hora de Inicio del Modo Día:</label>
+                            <input type="time" id="wakeTime" name="wakeTime" pattern="[0-2][0-9]:[0-5][0-9]" value="07:55" required>
+                            <small>Hora (HH:MM) en la que el anemómetro cambia a modo "día".</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="sleepTime">Hora de Inicio del Modo Noche:</label>
+                            <input type="time" id="sleepTime" name="sleepTime" pattern="[0-2][0-9]:[0-5][0-9]" value="19:30" required>
+                            <small>Hora (HH:MM) en la que el anemómetro cambia a modo "noche".</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="readDayMs">Intervalo Lectura (Día, seg):</label>
+                            <input type="number" id="readDayMs" name="readDayMs" min="1" value="5" required>
+                            <small>Frecuencia de lectura BLE en modo día.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="readNightMs">Intervalo Lectura (Noche, seg):</label>
+                            <input type="number" id="readNightMs" name="readNightMs" min="1" value="60" required>
+                            <small>Frecuencia de lectura BLE en modo noche.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="sendDayMs">Intervalo Envío (Día, min):</label>
+                            <input type="number" id="sendDayMs" name="sendDayMs" min="1" value="3" required>
+                            <small>Frecuencia de envío MQTT en modo día.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="sendNightMs">Intervalo Envío (Noche, min):</label>
+                            <input type="number" id="sendNightMs" name="sendNightMs" min="1" value="60" required>
+                            <small>Frecuencia de envío MQTT en modo noche.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="mqttKeepAliveS">MQTT Keep-Alive (seg):</label>
+                            <input type="number" id="mqttKeepAliveS" name="mqttKeepAliveS" min="10" value="20" required>
+                            <small>Intervalo del keep-alive de MQTT.</small>
+                        </div>
+                        <button type="submit" id="save-button">Guardar Configuración</button>
+                    </form>
+                    <div id="message" class="message"></div>
+                </div>
+
+                <div class="card">
+                    <h2>Mantenimiento</h2>
+                    <p>El dispositivo se ha reiniciado <strong id="reset-count-valor">--</strong> veces.</p>
+                    <p>Pone a cero el contador de reinicios del dispositivo. Útil después de un mantenimiento o actualización.</p>
+                    <button id="reset-counter-button" class="button-warning">Poner Contador a Cero</button>
+                    <button id="reboot-button" class="button-danger">Reiniciar Dispositivo</button>
+                </div>
+            </div>
+
+            <div id="diagnostico" class="tab-content">
+                <div class="card">
+                    <h2>Diagnóstico del Sistema</h2>
+                    <button id="run-diagnostic-button">Ejecutar Diagnóstico</button>
+                    <div id="diagnostic-output">
+                        <p>Los resultados del diagnóstico aparecerán aquí.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="logs" class="tab-content">
+                <div class="card">
+                    <h2>Logs en Directo</h2>
+                    <button id="get-status-button" class="button-small">Solicitar Estado/Logs Actuales</button>
+                    <div id="logs-output" class="logs-container"></div>
+                </div>
+            </div>
+
+            <div id="alertas" class="tab-content">
+                <div class="card">
+                    <h2>Alertas en Tiempo Real</h2>
+                    <div id="alerts-container">
+                        <p>Esperando alertas...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html> 

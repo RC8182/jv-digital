@@ -4,6 +4,11 @@ import { useEffect, useRef, useMemo } from 'react';
 import 'leaflet/dist/leaflet.css';
 
 function buildUniformField({ velocidad, direccion }) {
+  if (velocidad === null || velocidad === undefined || 
+      direccion === null || direccion === undefined) {
+    return null;
+  }
+
   const bbox = { lo1: -17.0, la1: 28.7, lo2: -16.0, la2: 27.8 };
   const nx = 61, ny = 49;
   const dx = (bbox.lo2 - bbox.lo1) / (nx - 1);
@@ -35,7 +40,7 @@ export default function WindVelocityMedano({ reading }) {
   const velocityRef = useRef(null);
 
   const windData = useMemo(() => {
-    if (!reading) return null;
+    if (!reading || !reading.velocidad || !reading.direccion) return null;
     return buildUniformField(reading);
   }, [reading?.velocidad, reading?.direccion]);
 
@@ -141,7 +146,8 @@ export default function WindVelocityMedano({ reading }) {
   return (
     <div
       id="wind-map"
-      style={{ width: '100%', height: '50vh' }}
+      className="w-full h-full rounded-lg overflow-hidden"
+      style={{ width: '100%', height: '100%' }}
     />
   );
 }

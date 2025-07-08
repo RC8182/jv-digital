@@ -9,6 +9,7 @@ import prisma             from '@/lib/prisma';
 import fs                 from 'node:fs/promises';
 import path               from 'node:path';
 import { getOpenAI } from '@/lib/openai.js';
+import { PDFDocument } from 'pdf-lib';
 
 import { extractText, splitText } from '@/app/api/agente/utils/pdfExtractor.js';
 import { uploadExpensePdfToQdrant, EXPENSES_COLLECTION_NAME } from '@/app/api/agente/utils/qdrantExpenses.js';
@@ -26,16 +27,49 @@ export async function POST(req) {
     }
     const userId = session.user.id;
 
-    // 2 · Leer PDF desde form-data
+    // 2 · Leer archivo desde form-data
     const formData = await req.formData();
     const file = formData.get('file');
-    if (!file || file.type !== 'application/pdf') {
-      return NextResponse.json({ error: 'Se requiere un PDF válido.' }, { status: 400 });
+    if (!file) {
+      return NextResponse.json({ error: 'Se requiere un archivo PDF o imagen.' }, { status: 400 });
     }
 
-    // 3 · Convertir a Buffer y calcular hash SHA-256
-    const arrayBuffer = await file.arrayBuffer();
-    const pdfBuffer = Buffer.from(arrayBuffer);
+    let pdfBuffer;
+    let originalFileName = file.name;
+    let isImage = false;
+
+    if (file.type === 'application/pdf') {
+      // PDF directo
+      const arrayBuffer = await file.arrayBuffer();
+      pdfBuffer = Buffer.from(arrayBuffer);
+    } else if (file.type === 'image/jpeg' || file.type === 'image/png') {
+      // Imagen: convertir a PDF
+      isImage = true;
+      const arrayBuffer = await file.arrayBuffer();
+      const imageBuffer = Buffer.from(arrayBuffer);
+      // Crear PDF con la imagen
+      const pdfDoc = await PDFDocument.create();
+      let image;
+      if (file.type === 'image/jpeg') {
+        image = await pdfDoc.embedJpg(imageBuffer);
+      } else {
+        image = await pdfDoc.embedPng(imageBuffer);
+      }
+      const page = pdfDoc.addPage([image.width, image.height]);
+      page.drawImage(image, {
+        x: 0,
+        y: 0,
+        width: image.width,
+        height: image.height,
+      });
+      pdfBuffer = Buffer.from(await pdfDoc.save());
+      // Cambiar el nombre para que termine en .pdf
+      originalFileName = file.name.replace(/\.(jpg|jpeg|png)$/i, '.pdf');
+    } else {
+      return NextResponse.json({ error: 'Solo se aceptan archivos PDF o imágenes (JPG, PNG).' }, { status: 400 });
+    }
+
+    // 3 · Calcular hash SHA-256
     const hash = createHash('sha256').update(pdfBuffer).digest('hex');
 
     // 4 · Detectar duplicado
@@ -54,7 +88,7 @@ export async function POST(req) {
     const docId = randomUUID();
     const UPLOAD_DIR = path.join(process.cwd(), 'public', 'expenses_docs');
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
-    const filenameOnDisk = `${docId}_${file.name}`;
+    const filenameOnDisk = `${docId}_${originalFileName}`;
     const filePathRelative = `/expenses_docs/${filenameOnDisk}`;
     const absoluteFilePath = path.join(UPLOAD_DIR, filenameOnDisk);
     await fs.writeFile(absoluteFilePath, pdfBuffer);
@@ -63,7 +97,7 @@ export async function POST(req) {
     const createdExpense = await prisma.expense.create({
       data: {
         userId,
-        filename: file.name,
+        filename: originalFileName,
         docId,
         filePath: filePathRelative,
         fileHash: hash,
@@ -76,7 +110,19 @@ export async function POST(req) {
     let fullText = '';
     try {
       fullText = await extractText(pdfBuffer);
-      if (!fullText.trim()) throw new Error('No se extrajo texto del PDF.');
+      if (!fullText.trim() || fullText.trim().length < 20) {
+        await prisma.expense.update({
+          where: { id: createdExpense.id },
+          data: {
+            processingStatus: 'error',
+            processingError: 'No se pudo extraer texto útil del documento. Asegúrate de que la foto sea clara y legible.'
+          }
+        });
+        return NextResponse.json({
+          error: 'processing_error',
+          message: 'No se pudo extraer texto útil del documento. Asegúrate de que la foto sea clara y legible.'
+        }, { status: 400 });
+      }
     } catch (extractErr) {
       await prisma.expense.update({
         where: { id: createdExpense.id },
@@ -144,7 +190,12 @@ Formato JSON de salida:
         temperature: 0
       });
 
-      const parsed = JSON.parse(llmResponse.choices[0].message.content);
+      // Validar que la respuesta sea JSON
+      let content = llmResponse.choices[0].message.content;
+      if (!content.trim().startsWith('{') || !content.trim().endsWith('}')) {
+        throw new Error('La respuesta del modelo no es un JSON válido.');
+      }
+      const parsed = JSON.parse(content);
 
       extractedData = {
         supplier:    parsed.supplier || null,
@@ -166,14 +217,14 @@ Formato JSON de salida:
       });
       return NextResponse.json({
         error: 'processing_error',
-        message: 'No se pudieron extraer metadatos con el LLM.',
+        message: 'No se pudieron extraer metadatos con el LLM. Asegúrate de que la foto sea clara, legible y que la factura esté bien encuadrada.',
         details: llmErr.message
-      }, { status: 500 });
+      }, { status: 400 });
     }
 
     // 9 · Indexar en Qdrant (incluyendo epígrafes en payload)
     try {
-      const success = await uploadExpensePdfToQdrant(pdfBuffer, file.name, docId, extractedData);
+      const success = await uploadExpensePdfToQdrant(pdfBuffer, originalFileName, docId, extractedData);
       if (!success) throw new Error('uploadExpensePdfToQdrant devolvió false.');
     } catch (qdrantErr) {
       await prisma.expense.update({

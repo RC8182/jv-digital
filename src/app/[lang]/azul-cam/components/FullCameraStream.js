@@ -1,106 +1,67 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import videojs from "video.js";
-import "video.js/dist/video-js.css";
 import Hls from "hls.js";
-import { fetchProducts } from "../utils/azul-fetch"; // Asegúrate de que la ruta es correcta
-import Marquee from "./marquee";
+import { fetchProducts } from "../utils/azul-fetch";
+import usePresetStore from "@/store/presetStore";
 
 const FullCameraStream = ({ params }) => {
-  const idioma = params.lang || "es";
-  const playakite = idioma === "es" ? "Playa Kite" : "Kite Beach";
-  const bilenko = idioma === "es" ? "Tecnología ofrecida por" : "Technology offered by";
+  const idioma        = params.lang || "es";
+  const playakite     = idioma === "es" ? "Playa Kite" : "Kite Beach";
+  const bilenkoTxt    = idioma === "es" ? "Tecnología ofrecida por" : "Technology offered by";
   const tituloBotones = idioma === "es" ? "¡Elige tu vista!" : "Choose your view!";
 
-  const videoRef = useRef(null);
-  const hlsInstanceRef = useRef(null);
+  const videoRef        = useRef(null);
+  const hlsInstanceRef  = useRef(null);
 
-  const [isClient, setIsClient] = useState(false);
-  const [selectedPreset, setSelectedPreset] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(null);
+  const [isClient,      setIsClient]      = useState(false);
+  const [selectedPreset,setSelectedPreset] = useState(null);
+  const [products,      setProducts]      = useState([]);
+  const [isLoading,     setIsLoading]     = useState(true);
+  const [fetchError,    setFetchError]    = useState(null);
 
-  // Establecer que el componente es cliente
+  // Estado global de presets
+  const { presetsDisabled, arePresetsEnabled } = usePresetStore();
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Obtener productos al montar el componente
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const fetchedProducts = await fetchProducts();
-
-        // Transformar los productos al formato requerido por Marquee
-        const transformedProducts = fetchedProducts.map((product) => ({
-          id: product.id,
-          name: product.name, // Nombre del producto
-          link: product.permalink, // Enlace al producto
-          img: product.images[0]?.src || "", // Primera imagen
-          price: product.price ? `${product.price} €` : "Precio no disponible", // Precio
+        const fetched = await fetchProducts();
+        const mapped  = fetched.map(p => ({
+          id:    p.id,
+          name:  p.name,
+          link:  p.permalink,
+          img:   p.images[0]?.src ?? "",
+          price: p.price ? `${p.price} €` : "Precio no disponible",
         }));
-
-        setProducts(transformedProducts);
+        setProducts(mapped);
         setIsLoading(false);
-      } catch (error) {
-        console.error("Error al obtener productos:", error);
-        setFetchError(error);
+      } catch (err) {
+        console.error("Error al obtener productos:", err);
+        setFetchError(err);
         setIsLoading(false);
       }
     };
-
-    if (isClient) {
-      getProducts();
-    }
+    if (isClient) getProducts();
   }, [isClient]);
 
-  // Rotar el índice actual de productos cada 5 segundos
   useEffect(() => {
-    if (products.length > 0) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
-      }, 5000);
-      return () => clearInterval(interval);
-    }
+    if (products.length === 0) return;
+    const id = setInterval(
+      () => setSelectedPreset((i) => (i + 1) % products.length),
+      5000
+    );
+    return () => clearInterval(id);
   }, [products]);
 
-  // Inicializar el reproductor de video
   useEffect(() => {
-    if (isClient && videoRef.current && products.length > 0) {
-      const videoElement = videoRef.current;
-      const player = videojs(videoElement, {
-        liveui: true,
-        fluid: true,
-        controls: true,
-        autoplay: true,
-        muted: true,
-        controlBar: {
-          fullscreenToggle: true, // Asegura que el botón de pantalla completa está habilitado
-        },
-      });
-      setupHLS(videoElement);
-
-      // Listener para pantalla completa
-      player.on('fullscreenchange', () => {
-        if (player.isFullscreen()) {
-          console.log('Entró en pantalla completa');
-        } else {
-          console.log('Salió de pantalla completa');
-        }
-      });
-
-      return () => {
-        if (hlsInstanceRef.current) {
-          hlsInstanceRef.current.destroy();
-          hlsInstanceRef.current = null;
-        }
-        player.dispose();
-      };
-    }
-  }, [isClient, products]);
+    if (!isClient || !videoRef.current) return;
+    setupHLS(videoRef.current);
+  }, [isClient]);
 
   // Configurar HLS
   const setupHLS = (videoElement) => {
@@ -132,7 +93,13 @@ const FullCameraStream = ({ params }) => {
   };
 
   // Manejar la selección de preset
-  const handlePreset = (presetId) => {
+  const handlePreset = async (presetId) => {
+    // Verificar si los presets están habilitados
+    if (!arePresetsEnabled()) {
+      alert(idioma === "es" ? "Los presets están deshabilitados globalmente" : "Presets are globally disabled");
+      return;
+    }
+
     setSelectedPreset(presetId);
     const preset =
       presetId === "AzulKiteboarding"
@@ -144,20 +111,27 @@ const FullCameraStream = ({ params }) => {
         : "";
     const url = `/api/azul-cam/cameraControl?action=preset&preset=${preset}`;
 
-    fetch(url)
-      .then((response) => {
-        if (response.ok) {
-          console.log(`Preset ${presetId} activado`);
-          if (videoRef.current) {
-            setupHLS(videoRef.current);
-          }
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      if (response.ok) {
+        console.log(`Preset ${presetId} activado`);
+        if (videoRef.current) {
+          setupHLS(videoRef.current);
+        }
+      } else {
+        if (data.presetsDisabled) {
+          alert(idioma === "es" ? "Los presets están deshabilitados globalmente" : "Presets are globally disabled");
         } else {
           console.error("Error al activar preset");
+          alert(idioma === "es" ? "Error al cambiar la vista de la cámara" : "Error changing camera view");
         }
-      })
-      .catch((error) => {
-        console.error("Error al conectar con la cámara:", error);
-      });
+      }
+    } catch (error) {
+      console.error("Error al conectar con la cámara:", error);
+      alert(idioma === "es" ? "Error de conexión con la cámara" : "Camera connection error");
+    }
   };
 
   if (!isClient || isLoading) {
@@ -172,38 +146,53 @@ const FullCameraStream = ({ params }) => {
     <div className="video-container min-w-[300px]">
       <h1 className="p-2 text-center md:text-4xl text-lg mb-[10px]">El Médano Webcam</h1>
 
+      {/* Indicador de estado de presets */}
+      {presetsDisabled && (
+        <div className="bg-red-500 text-white text-center py-2 px-4 mb-4 rounded">
+          {idioma === "es" ? "⚠️ Presets deshabilitados globalmente" : "⚠️ Presets globally disabled"}
+        </div>
+      )}
+
       <div className="video-wrapper relative w-full bg-black">
-        <Marquee products={products} currentIndex={currentIndex} />
         <video
           ref={videoRef}
-          className="video-js vjs-default-skin vjs-big-play-centered"
+          className="w-full h-auto block object-cover"
+          playsInline
+          muted
+          controls
         />
       </div>
 
-      <div className="p-4 flex justify-end items-center">
-        <h2 className="text-xs text-white font-bold mb-4">{bilenko}</h2>
+      <div className="p-4 flex justify-end items-center gap-2">
+        <h2 className="text-xs text-white font-bold">{bilenkoTxt}</h2>
         <a href="https://bilenko.es/">
           <img
-            className="ml-2 w-16"
+            className="w-16"
             src="https://www.azulkiteboarding.com/wp-content/uploads/2024/02/LOGO-BILENKO_VERDE.png"
             alt="Bilenko Logo"
             loading="lazy"
           />
         </a>
       </div>
+
       <h1 className="p-2 text-center md:text-3xl text-lg mb-[10px]">{tituloBotones}</h1>
+
       <div className="p-10 flex flex-col justify-center gap-10 md:flex-row">
         {["AzulKiteboarding", playakite, "Muelle"].map((preset) => (
           <button
             key={preset}
             onClick={() => handlePreset(preset)}
-            className={`preset-button ${selectedPreset === preset ? "selected" : ""}`}
+            disabled={presetsDisabled}
+            className={`preset-button ${selectedPreset === preset ? "selected" : ""} ${
+              presetsDisabled ? "disabled" : ""
+            }`}
           >
             {preset}
           </button>
         ))}
       </div>
 
+      {/* Estilos internos */}
       <style jsx>{`
         .video-container {
           max-width: 1000px;
@@ -236,6 +225,10 @@ const FullCameraStream = ({ params }) => {
         .preset-button.selected {
           background: #007bff;
           color: #fff;
+        }
+        .preset-button.disabled { 
+          background:#666; color:#999; cursor:not-allowed; 
+          border-color:#666; opacity:0.5;
         }
       `}</style>
       {/*<Anemometro/>*/}

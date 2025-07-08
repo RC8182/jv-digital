@@ -12,7 +12,7 @@ const Marquee = ({ products, currentIndex }) => {
   return (
     <div className="marquee">
       <div className="flex justify-center items-center gap-4">
-        {product.img && (
+        {product?.img && (
           <img
             src={product.img}
             alt={product.name}
@@ -21,14 +21,14 @@ const Marquee = ({ products, currentIndex }) => {
         )}
         <div className="product-details">
           <a
-            href={product.link}
+            href={product?.link}
             target="_blank"
             rel="noopener noreferrer"
             className="md:text-base text-xs font-bold"
           >
-            {product.name}
+            {product?.name}
           </a>
-          <p className="product-price text-gray-300">{product.price}</p>
+          <p className="product-price text-gray-300">{product?.price}</p>
         </div>
       </div>
 

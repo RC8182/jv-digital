@@ -5,6 +5,8 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchProducts } from "../utils/azul-fetch";
 import Marquee from "./marquee";
+import PTZControls from "./PTZControls";
+import usePresetStore from "@/store/presetStore";
 
 const FullCameraStream = ({ params }) => {
   /* ────────────────  TEXTOS MULTI-IDIOMA  ──────────────── */
@@ -20,10 +22,12 @@ const FullCameraStream = ({ params }) => {
 
   const [isClient,      setIsClient]      = useState(false);
   const [selectedPreset,setSelected]      = useState(null);
-  const [currentIndex,  setCurrentIndex]  = useState(0);
   const [products,      setProducts]      = useState([]);
   const [isLoading,     setIsLoading]     = useState(true);
   const [fetchError,    setFetchError]    = useState(null);
+
+  // Estado global de presets
+  const { presetsDisabled, arePresetsEnabled } = usePresetStore();
 
   /* ────────────────  MARCAR COMO CLIENTE  ──────────────── */
   useEffect(() => { setIsClient(true); }, []);
@@ -55,7 +59,7 @@ const FullCameraStream = ({ params }) => {
   useEffect(() => {
     if (products.length === 0) return;
     const id = setInterval(
-      () => setCurrentIndex(i => (i + 1) % products.length),
+      () => setSelected((i) => (i + 1) % products.length),
       5000
     );
     return () => clearInterval(id);
@@ -106,20 +110,38 @@ const FullCameraStream = ({ params }) => {
   }, [readerLoaded, products]);
 
     /* ────────────────  HANDLER PRESETS PTZ  ──────────────── */
-  const handlePreset = (presetId) => {
+  const handlePreset = async (presetId) => {
+    // Verificar si los presets están habilitados
+    if (!arePresetsEnabled()) {
+      alert(idioma === "es" ? "Los presets están deshabilitados globalmente" : "Presets are globally disabled");
+      return;
+    }
+
     setSelected(presetId);
     const preset =
       presetId === "AzulKiteboarding" ? 1 :
       presetId === playakite          ? 2 :
       presetId === "Muelle"           ? 3 : "";
 
-    fetch(`/api/azul-cam/cameraControl?action=preset&preset=${preset}`)
-      .then(r => {
-        if (!r.ok) throw new Error("Respuesta PTZ KO");
-        console.log(`Preset ${presetId} activado`);
-        // No es necesario reiniciar WebRTC: la transmisión sigue automáticamente
-      })
-      .catch(err => console.error("Error PTZ:", err));
+    try {
+      const response = await fetch(`/api/azul-cam/cameraControl?action=preset&preset=${preset}`);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        if (data.presetsDisabled) {
+          alert(idioma === "es" ? "Los presets están deshabilitados globalmente" : "Presets are globally disabled");
+        } else {
+          throw new Error("Respuesta PTZ KO");
+        }
+        return;
+      }
+      
+      console.log(`Preset ${presetId} activado`);
+      // No es necesario reiniciar WebRTC: la transmisión sigue automáticamente
+    } catch (err) {
+      console.error("Error PTZ:", err);
+      alert(idioma === "es" ? "Error al cambiar la vista de la cámara" : "Error changing camera view");
+    }
   };
 
   /* ────────────────  RENDER  ──────────────── */
@@ -134,8 +156,15 @@ const FullCameraStream = ({ params }) => {
     <div className="video-container min-w-[300px]">
       <h1 className="p-2 text-center md:text-4xl text-lg mb-[10px]">El Médano Webcam</h1>
 
+      {/* Indicador de estado de presets */}
+      {presetsDisabled && (
+        <div className="bg-red-500 text-white text-center py-2 px-4 mb-4 rounded">
+          {idioma === "es" ? "⚠️ Presets deshabilitados globalmente" : "⚠️ Presets globally disabled"}
+        </div>
+      )}
+
       <div className="video-wrapper relative w-full bg-black">
-        <Marquee products={products} currentIndex={currentIndex} />
+        <Marquee products={products} currentIndex={selectedPreset} />
         <video
           ref={videoRef}
           className="webrtc-video w-full h-auto block object-cover"
@@ -143,6 +172,7 @@ const FullCameraStream = ({ params }) => {
           muted
           controls
         />
+        <PTZControls /> {/* ── Joystick y Zoom superpuesto en esquina ── */}
       </div>
 
       <div className="p-4 flex justify-end items-center gap-2">
@@ -163,7 +193,10 @@ const FullCameraStream = ({ params }) => {
           <button
             key={preset}
             onClick={() => handlePreset(preset)}
-            className={`preset-button ${selectedPreset === preset ? "selected" : ""}`}
+            disabled={presetsDisabled}
+            className={`preset-button ${selectedPreset === preset ? "selected" : ""} ${
+              presetsDisabled ? "disabled" : ""
+            }`}
           >
             {preset}
           </button>
@@ -177,6 +210,10 @@ const FullCameraStream = ({ params }) => {
                             border-radius:5px; border:1px solid #007bff; cursor:pointer;
                             transition:background .3s,color .3s; }
         .preset-button.selected { background:#007bff; color:#fff; }
+        .preset-button.disabled { 
+          background:#666; color:#999; cursor:not-allowed; 
+          border-color:#666; opacity:0.5;
+        }
       `}</style>
     </div>
   );

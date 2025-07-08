@@ -1,56 +1,101 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import config from '../config';
 
-const API = 'https://azul-kite.ddns.net/api/anemometro';
+function getTodayDateStr() {
+  const today = new Date();
+  return today.toISOString().slice(0, 10); // YYYY-MM-DD
+}
 
 export default function useWindData(mode) {
   const [live, setLive]       = useState(null);
   const [history, setHistory] = useState([]);
-  const [state, setState]     = useState(null);
-  const wsRef = useRef(null);
+  const pollingRef = useRef(null);
 
   const fetchHistory = useCallback(async () => {
-    const url = mode === 'live'
-      ? `${API}/raw?limit=500&order=timestamp&nonull=1`
-      : `${API}/${mode}`;
-    const res = await fetch(url);
-    setHistory(await res.json());
-  }, [mode]);
-
-  const fetchState = useCallback(async () => {
-    const res = await fetch(`${API}/state`);
-    setState(await res.json());
-  }, []);
-
-  // Inicializar WebSocket solo si estamos en modo "live"
-  useEffect(() => {
-    if (mode !== 'live') return;
-
-    const socket = new WebSocket('wss://azul-kite.ddns.net/ws');
-    wsRef.current = socket;
-
-    socket.onmessage = (msg) => {
-      const { data: d } = JSON.parse(msg.data);
-      if (d?.velocidad !== undefined) setLive(d);
-    };
-
-    return () => socket.close();
-  }, [mode]);
-
-  // Si no es "live", seguimos usando fetch tradicional
-  useEffect(() => {
-    if (mode !== 'live') {
-      const fetchLive = async () => {
-        const res = await fetch(`${API}/raw?limit=1&order=id&nonull=1`);
-        const [row] = await res.json();
-        if (row) setLive(row);
-      };
-      fetchLive();
-      const id = setInterval(fetchLive, 5000);
-      return () => clearInterval(id);
+    try {
+      if (mode === 'raw') {
+        const res = await fetch(`${config.API_BASE_URL}/raw`, { cache: 'no-store' });
+        if(res.ok) {
+          const data = await res.json();
+          setHistory(Array.isArray(data) ? data : []);
+        } else {
+          setHistory([]);
+        }
+      } else if (mode === '3min') {
+        // Para 3min, usar la ruta directa para mantener la funcionalidad original
+        const res = await fetch(`${config.API_BASE_URL}/3min`, { cache: 'no-store' });
+        if(res.ok) {
+          const data = await res.json();
+          setHistory(Array.isArray(data) ? data : []);
+          if (Array.isArray(data) && data.length > 0) {
+            setLive(data[0]);
+          }
+        } else {
+          setHistory([]);
+        }
+      } else {
+        // Para otros modos (15min, hourly), usar la ruta history con filtros
+        const date = getTodayDateStr();
+        const res = await fetch(`${config.API_BASE_URL}/history?date=${date}&timeframe=${mode}`, { cache: 'no-store' });
+        if(res.ok) {
+          const data = await res.json();
+          setHistory(Array.isArray(data.data) ? data.data : []);
+          if (Array.isArray(data.data) && data.data.length > 0) {
+            setLive(data.data[0]);
+          }
+        } else {
+          setHistory([]);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch history:", error);
+      setHistory([]);
     }
   }, [mode]);
 
-  useEffect(() => { fetchHistory(); fetchState(); }, [fetchHistory]);
+  const fetchLatestData = useCallback(async () => {
+    if (mode !== 'raw') return;
+    try {
+      const res = await fetch(`${config.API_BASE_URL}/raw`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        const row = Array.isArray(data) && data.length > 0 ? data[0] : null;
+        if (row) {
+          setLive(row);
+          setHistory(prevHistory => {
+            const newHistory = [row, ...prevHistory.filter(item => item.id !== row.id)];
+            return newHistory.slice(0, config.MAX_HISTORY_ITEMS);
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch latest data:", error);
+    }
+  }, [mode]);
 
-  return { live, history, state };
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
+  useEffect(() => {
+    // Polling para todos los modos
+    let fetchFn;
+    if (mode === 'raw') {
+      fetchFn = fetchLatestData;
+    } else {
+      fetchFn = fetchHistory;
+    }
+    fetchFn(); // Fetch inicial
+    pollingRef.current = setInterval(() => {
+      fetchFn();
+    }, config.POLLING_INTERVAL);
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
+  }, [mode, fetchLatestData, fetchHistory]);
+
+  return { live, history, wsConnected: false, wsError: null };
 }

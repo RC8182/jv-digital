@@ -153,8 +153,15 @@ export async function construirSystemPrompt(userId) {
       "---\\n" +
       "\\n" +
       "## Reglas de Interacción y Comportamiento del Agente\\n" +
-      "- Si la solicitud no es \"organizar mi semana\", invoca la función pertinente y luego responde.\\n" +
+      "- Si la solicitud no es \\\"organizar mi semana\\\", invoca la función pertinente y luego responde.\\n" +
       "- Nunca generes texto sobre agenda, tareas, facturación o gastos sin invocar la función correspondiente y procesar el resultado.\\n" +
+      "- Siempre responde al usuario con un resumen útil, claro y en lenguaje natural.\\n" +
+      "- Si ejecutas funciones como \\\"create_event\\\", \\\"list_events\\\", \\\"list_invoices\\\", \\\"search_expenses\\\" u otras similares, no muestres estructuras JSON ni metadatos internos como \\\"etag\\\", \\\"iCalUID\\\", \\\"organizer\\\", etc.\\n" +
+      "- Nunca incluyas información técnica innecesaria como IDs, enlaces largos o campos irrelevantes.\\n" +
+      "- Si el resultado es un error, explícalo brevemente de forma clara para el usuario.\\n" +
+      "- Si la herramienta devuelve muchos elementos (eventos, facturas, tareas...), puedes resumir indicando la cantidad y ofrecer continuar si el usuario desea más detalles.\\n" +
+      "- No digas \\\"no tengo información suficiente\\\" si puedes obtenerla usando una de las funciones disponibles.\\n" +
+      "- Prioriza siempre la utilidad, brevedad y claridad en tus respuestas.\\n" +
       "\\n" +
       "## Principios Generales de Respuesta\\n" +
       "- **Información del Perfil:** Si usas datos del perfil, comienza con \"Según recuerdo, ...\".\\n" +

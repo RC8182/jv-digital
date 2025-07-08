@@ -1,7 +1,6 @@
 import React from 'react';
-import { Inter, Dancing_Script, Roboto_Mono } from 'next/font/google';
+import { Inter, Roboto_Mono, Dancing_Script } from 'next/font/google';
 import './globals.css';
-import InitAnimations from '@/components/InitAnimations';
 import SessionProviderWrapper from '@/components/SessionProviderWrapper';
 
 const inter = Inter({
@@ -23,13 +22,12 @@ const dancingScript = Dancing_Script({
   variable: '--dancing-script',
 });
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, params }) {
   return (
-    <html lang="es">
-      <body className={`${inter.variable} ${roboto_mono.variable} ${dancingScript.variable}`}>
-        <InitAnimations />
+    <html lang={params.lang}>
+      <body suppressHydrationWarning={true}>
         <SessionProviderWrapper>
-         {children}
+          {children}
         </SessionProviderWrapper>
         
       </body>

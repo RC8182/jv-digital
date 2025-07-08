@@ -630,6 +630,25 @@ export default function InvoicePage({ params }) {
               >
                 Exportar a PDF
               </button>
+              {editingInvoiceId && (
+                <button
+                  onClick={() => {
+                    // Resetea el formulario y sale del modo edición
+                    setEditingInvoiceId(null);
+                    setInvoiceMeta({
+                      number: invoiceMeta.number, // Keep current number
+                      date: new Date().toISOString().slice(0, 10),
+                      dueDate: '',
+                      status: 'PENDING',
+                      paidDate: '',
+                    });
+                    setItems([]);
+                  }}
+                  className="bg-gray-500 text-white px-6 py-3 rounded-md hover:bg-gray-600 font-semibold shadow-md transition-colors flex-1 sm:flex-none"
+                >
+                  Cancelar
+                </button>
+              )}
             </div>
           )}
 
@@ -691,6 +710,71 @@ export default function InvoicePage({ params }) {
                         className="text-red-500 hover:text-red-400 font-semibold"
                       >
                         Borrar
+                      </button>
+                      <button
+                        onClick={async () => {
+                          // Obtener datos completos de la factura
+                          const res = await fetch(`/api/agente/invoices/${inv.id}`);
+                          if (!res.ok) {
+                            alert("No se pudo descargar la factura");
+                            return;
+                          }
+                          const data = await res.json();
+                          // Obtener datos del cliente (ya está en 'client')
+                          // Si el cliente actual no corresponde, buscarlo en la lista
+                          let facturaCliente = client;
+                          if (!facturaCliente || facturaCliente.id !== data.clientId) {
+                            facturaCliente = clients.find(c => c.id === data.clientId) || {};
+                          }
+                          // Datos del emisor (igual que en la cabecera)
+                          const issuer = {
+                            name: "Javier Nicolás Visconti",
+                            address: "C/ Caracol nº 3, 38618 Los Abrigos, Tenerife",
+                            phone: "+34 648416513",
+                            email: "info@jv-digital.com",
+                            nif: "X8465115B",
+                          };
+                          // Calcular totales
+                          const IGIC_RATE = 0.07;
+                          const IRPF_RATE = 0.07;
+                          const items = data.lines.map(line => ({
+                            ...line,
+                            quantity: Number(line.quantity),
+                            unitPrice: Number(line.unitPrice),
+                            discount: Number(line.discount),
+                          }));
+                          const subtotal = items.reduce(
+                            (sum, it) =>
+                              sum +
+                              it.quantity * it.unitPrice * (1 - it.discount / 100),
+                            0
+                          );
+                          const igic = data.includeIGIC ? subtotal * IGIC_RATE : 0;
+                          const irpf = data.includeIRPF ? subtotal * IRPF_RATE : 0;
+                          const total = subtotal + igic - irpf;
+                          // Exportar PDF
+                          exportPDF({
+                            invoiceMeta: {
+                              number: data.number,
+                              date: data.date.slice(0, 10),
+                              dueDate: data.dueDate ? data.dueDate.slice(0, 10) : "",
+                              status: data.status,
+                              paidDate: data.paidDate ? data.paidDate.slice(0, 10) : "",
+                            },
+                            issuer,
+                            client: facturaCliente,
+                            items,
+                            includeIGIC: data.includeIGIC,
+                            includeIRPF: data.includeIRPF,
+                            subtotal,
+                            igic,
+                            irpf,
+                            total,
+                          });
+                        }}
+                        className="text-green-500 hover:text-green-400 font-semibold"
+                      >
+                        Descargar
                       </button>
                     </div>
                   </li>

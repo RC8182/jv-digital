@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { fetchProducts } from "../utils/azul-fetch";
 import Marquee from "./marquee";
 import PTZControls from "./PTZJoystick";
+import usePresetStore from "@/store/presetStore";
 
 const FullCameraStreamFull = ({ params }) => {
   const idioma        = params.lang || "es";
@@ -22,7 +23,21 @@ const FullCameraStreamFull = ({ params }) => {
   const [isLoading,     setIsLoading]     = useState(true);
   const [fetchError,    setFetchError]    = useState(null);
 
+  // Estado global de presets
+  const { presetsDisabled, arePresetsEnabled } = usePresetStore();
+
+  // Detectar si estamos en la página de Ricardo
+  const [isRicardoPage, setIsRicardoPage] = useState(false);
+
   useEffect(() => { setIsClient(true); }, []);
+
+  // Detectar si estamos en la página de Ricardo
+  useEffect(() => {
+    if (isClient) {
+      const pathname = window.location.pathname;
+      setIsRicardoPage(pathname.includes('/ricardo'));
+    }
+  }, [isClient]);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -91,19 +106,37 @@ const FullCameraStreamFull = ({ params }) => {
     }
   }, [readerLoaded, products]);
 
-  const handlePreset = (presetId) => {
+  const handlePreset = async (presetId) => {
+    // Verificar si los presets están habilitados (excepto para Ricardo)
+    if (!arePresetsEnabled() && !isRicardoPage) {
+      alert(idioma === "es" ? "Los presets están deshabilitados globalmente" : "Presets are globally disabled");
+      return;
+    }
+
     setSelected(presetId);
     const preset =
       presetId === "AzulKiteboarding" ? 1 :
       presetId === playakite          ? 2 :
       presetId === "Muelle"           ? 3 : "";
   
-    fetch(`/api/azul-cam/cameraControl?preset=${preset}`) 
-      .then(r => {
-        if (!r.ok) throw new Error("Error al cambiar preset");
-        console.log(`Preset ${presetId} activado`);
-      })
-      .catch(err => console.error("Error PTZ:", err));
+    try {
+      const response = await fetch(`/api/azul-cam/cameraControl?preset=${preset}`);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        if (data.presetsDisabled && !isRicardoPage) {
+          alert(idioma === "es" ? "Los presets están deshabilitados globalmente" : "Presets are globally disabled");
+        } else {
+          throw new Error("Error al cambiar preset");
+        }
+        return;
+      }
+      
+      console.log(`Preset ${presetId} activado`);
+    } catch (err) {
+      console.error("Error PTZ:", err);
+      alert(idioma === "es" ? "Error al cambiar la vista de la cámara" : "Error changing camera view");
+    }
   };
   
 
@@ -117,6 +150,20 @@ const FullCameraStreamFull = ({ params }) => {
   return (
     <div className="video-container min-w-[300px]">
       <h1 className="p-2 text-center md:text-4xl text-lg mb-[10px]">El Médano Webcam</h1>
+
+      {/* Indicador de estado de presets (solo para usuarios no-admin) */}
+      {presetsDisabled && !isRicardoPage && (
+        <div className="bg-red-500 text-white text-center py-2 px-4 mb-4 rounded">
+          {idioma === "es" ? "⚠️ Presets deshabilitados globalmente" : "⚠️ Presets globally disabled"}
+        </div>
+      )}
+
+      {/* Indicador de admin para Ricardo */}
+      {isRicardoPage && (
+        <div className="bg-green-500 text-white text-center py-2 px-4 mb-4 rounded">
+          🔑 {idioma === "es" ? "Modo Administrador - Control Total" : "Admin Mode - Full Control"}
+        </div>
+      )}
 
       <div className="video-wrapper relative w-full bg-black">
         {/* <Marquee products={products} currentIndex={selectedPreset} /> */}
@@ -149,7 +196,10 @@ const FullCameraStreamFull = ({ params }) => {
           <button
             key={preset}
             onClick={() => handlePreset(preset)}
-            className={`preset-button ${selectedPreset === preset ? "selected" : ""}`}
+            disabled={presetsDisabled && !isRicardoPage}
+            className={`preset-button ${selectedPreset === preset ? "selected" : ""} ${
+              presetsDisabled && !isRicardoPage ? "disabled" : ""
+            }`}
           >
             {preset}
           </button>
@@ -163,6 +213,10 @@ const FullCameraStreamFull = ({ params }) => {
                          border-radius:5px; border:1px solid #007bff; cursor:pointer;
                          transition:background .3s,color .3s; }
         .preset-button.selected { background:#007bff; color:#fff; }
+        .preset-button.disabled { 
+          background:#666; color:#999; cursor:not-allowed; 
+          border-color:#666; opacity:0.5;
+        }
       `}</style>
     </div>
   );
